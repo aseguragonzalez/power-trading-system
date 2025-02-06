@@ -1,6 +1,6 @@
 namespace TradingSystem.Domain.Services;
 
-public sealed record TradePosition
+public sealed class TradePosition
 {
     public readonly int PeriodId;
 

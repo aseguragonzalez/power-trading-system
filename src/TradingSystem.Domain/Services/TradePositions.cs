@@ -1,6 +1,6 @@
 namespace TradingSystem.Domain.Services;
 
-public sealed record TradePositions
+public sealed class TradePositions
 {
     public readonly IEnumerable<TradePosition> Positions;
 
