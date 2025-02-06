@@ -1,12 +1,12 @@
 namespace TradingSystem.Domain.Services;
 
-public record PowerPeriod
+public sealed record TradePosition
 {
     public readonly int PeriodId;
 
     public readonly double Volume;
 
-    public PowerPeriod(int periodId, double volume)
+    public TradePosition(int periodId, double volume)
     {
         if (periodId < 1 || periodId > 24)
         {
