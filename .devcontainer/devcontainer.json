@@ -1,0 +1,18 @@
+{
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit"
+      ]
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers-extra/features/act:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/gvatsal60/dev-container-features/pre-commit:1": {}
+  },
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-9.0-bookworm",
+  "name": "C# (.NET)"
+}
