@@ -9,15 +9,16 @@ public class ReportTest
     public void ShouldFailWhenAskingForPreviousDates()
     {
         // Arrange
-        DateTime date = DateTime.UtcNow.AddDays(-1);
-        Action act = () => _ = new Report(date: date);
+        DateTime createdAt = DateTime.UtcNow;
+        DateTime date = createdAt.AddDays(-1);
+        Action act = () => _ = new Report(createdAt: createdAt, date: date);
 
         // Act & Assert
         act.Should().Throw<ArgumentOutOfRangeException>().WithMessage("Date cannot be in the past. (Parameter 'date')");
     }
 
     [Fact]
-    public void ShouldAnInstanceOfReportWhenPassCreateAtValue()
+    public void ShouldCreateAnInstanceOfReport()
     {
         // Arrange
         DateTime createdAt = DateTime.UtcNow;
@@ -32,25 +33,53 @@ public class ReportTest
     }
 
     [Fact]
-    public void ShouldAnInstanceOfDefaultReport()
+    public void ShouldCreateAnInstanceWithDateValue()
     {
         // Arrange
         DateTime date = DateTime.UtcNow.AddDays(1);
 
         // Act
-        Report report = new(date: date);
+        Report report = new(date: date, offset: 0);
 
         // Assert
         report.Date.Should().Be(date);
-        report.CreatedAt.Should().BeBefore(DateTime.UtcNow);
+        report.CreatedAt.Should().BeCloseTo(DateTime.UtcNow, precision: TimeSpan.FromSeconds(10));
+        report.Offset.Should().Be(0);
     }
 
+    [Fact]
+    public void ShouldEnsureDateIsInUtc()
+    {
+        // Arrange
+        TimeZoneInfo berlinTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        DateTime date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, berlinTimeZone);
+
+        // Act
+        Action act = () => _ = new Report(createdAt: DateTime.UtcNow, date: date.AddDays(1));
+
+        // Assert
+        act.Should().Throw<ArgumentOutOfRangeException>().WithMessage("Date must be in UTC. (Parameter 'date')");
+    }
+
+    [Fact]
+    public void ShouldEnsureCreatedAtIsInUtc()
+    {
+        // Arrange
+        TimeZoneInfo berlinTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        DateTime createdAt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, berlinTimeZone);
+
+        // Act
+        Action act = () => _ = new Report(date: DateTime.UtcNow, createdAt: createdAt.AddDays(1));
+
+        // Assert
+        act.Should().Throw<ArgumentOutOfRangeException>().WithMessage("CreatedAt must be in UTC. (Parameter 'createdAt')");
+    }
 
     [Fact]
     public void ShouldRetrieveDefaultPositionsWhenNoTradePositionsWereAdded()
     {
         // Arrange
-        Report report = new(DateTime.UtcNow.AddDays(1));
+        Report report = new(DateTime.UtcNow.AddDays(1), offset: 0);
 
         // Act
         IEnumerable<ReportPosition> positions = report.GetPositions();
@@ -60,16 +89,45 @@ public class ReportTest
         positions.Should().NotContain(x => x.Volume != 0);
     }
 
+    [Fact]
+    public void ShouldRetrieveTheReportName()
+    {
+        // Arrange
+        DateTime createdAt = new(2023, 7, 1, 19, 15, 0, DateTimeKind.Utc);
+        Report report = new(date: createdAt.AddDays(1), createdAt: createdAt);
+
+        // Act
+        string reportName = report.ReportName;
+
+        // Assert
+        reportName.Should().Be("PowerPosition_20230702_202307011915.csv");
+    }
+
+    [Fact]
+    public void ShouldFailsWhenAddingNullTradePositions()
+    {
+        // Arrange
+        DateTime createdAt = new(2023, 7, 1, 19, 15, 0, DateTimeKind.Utc);
+        Report report = new(date: createdAt.AddDays(1), createdAt: createdAt);
+
+        // Act
+        Action act = () => report.AddTradePositions(null!);
+
+        // Assert
+        act.Should().Throw<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'tradePositions')");
+    }
+
     [Theory]
     [MemberData(nameof(GetTradePositionsTestData))]
     public void ShouldRetrieveCorrectPositionsWhenTradePositionsAreAdded(TradePositions tradePositions, IEnumerable<ReportPosition> expectedPositions)
     {
         // Arrange
-        Report report = new(date: new DateTime(2023, 7, 2, 0, 0, 0), createdAt: new DateTime(2023, 7, 1, 19, 15, 0));
+        DateTime createdAt = new(2023, 7, 1, 19, 15, 0, DateTimeKind.Utc);
+        Report report = new(date: createdAt.AddDays(1), createdAt: createdAt, offset: 2);
         report.AddTradePositions(tradePositions);
 
         // Act
-        IEnumerable<ReportPosition> positions = report.GetPositions(timeOffset: 2);
+        IEnumerable<ReportPosition> positions = report.GetPositions();
 
         // Assert
         positions.Should().BeEquivalentTo(expectedPositions);

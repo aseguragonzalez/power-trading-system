@@ -19,7 +19,7 @@ public sealed class CreateInterDayReport
     public async Task Execute(CreateInterDayReportRequest request)
     {
         TradePositions positions = await tradeService.GetPositionsByDate(request.ReportDate);
-        Report report = new(request.ReportDate);
+        Report report = new(request.ReportDate, offset: 0);
         report.AddTradePositions(positions);
         await reportRepository.Save(report);
     }

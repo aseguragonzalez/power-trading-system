@@ -59,9 +59,9 @@ public class CreateInterDayReportTest
         ITradeService tradeService = Substitute.For<ITradeService>();
         IReportRepository reportRepository = Substitute.For<IReportRepository>();
         CreateInterDayReport createInterDayReport = new(tradeService, reportRepository);
-        DateTime date = DateTime.UtcNow.AddDays(1);
-        TradePositions tradePositions = new();
-        tradeService.GetPositionsByDate(date).Returns(tradePositions);
+        DateTime createdAt = DateTime.UtcNow;
+        DateTime date = createdAt.AddDays(1);
+        tradeService.GetPositionsByDate(date).Returns(new TradePositions());
 
         // Act
         await createInterDayReport.Execute(new CreateInterDayReportRequest(date));
