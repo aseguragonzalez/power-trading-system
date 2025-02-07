@@ -4,7 +4,7 @@ using TradingSystem.Domain;
 using TradingSystem.Domain.Services;
 using TradingSystem.Infrastructure.Repositories;
 
-namespace TradingSystem.Infrastructure.UnitTests;
+namespace TradingSystem.Infrastructure.UnitTests.Repositories;
 
 public class CsvReportRepositoryTest
 {
