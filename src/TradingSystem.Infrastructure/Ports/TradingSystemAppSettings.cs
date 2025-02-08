@@ -2,23 +2,20 @@ namespace TradingSystem.Infrastructure.Ports;
 
 public sealed class TradingSystemAppSettings
 {
-    public const int DefaultTimeBewteenReports = 60;
-    public const string DefaultTimeZoneId = "Central European Standard Time";
+    public const int DefaultSecondsBewteenReports = 60;
+    public const string DefaultTimeZoneId = "Europe/Madrid";
 
-    public readonly string TimeZoneId;
+    public readonly TimeZoneInfo TimeZone;
 
-    public readonly int TimeBewteenReportsInSeconds;
+    public readonly TimeSpan SecondsBetweenReports;
 
-    public TradingSystemAppSettings(string timeZoneId = DefaultTimeZoneId, int timeBewteenReportsInSeconds = DefaultTimeBewteenReports)
+    public TradingSystemAppSettings(string timeZoneId = DefaultTimeZoneId, int sscondsBewteenReports = DefaultSecondsBewteenReports)
     {
         ArgumentNullException.ThrowIfNullOrWhiteSpace(timeZoneId, nameof(timeZoneId));
-        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual<int>(timeBewteenReportsInSeconds, 0, nameof(timeBewteenReportsInSeconds));
-        if (!TimeZoneInfo.GetSystemTimeZones().Any(x => x.Id == timeZoneId || x.StandardName == timeZoneId))
-        {
-            throw new ArgumentException($"TimeZoneId ({timeZoneId}) is invalid");
-        }
-
-        this.TimeZoneId = timeZoneId;
-        this.TimeBewteenReportsInSeconds = timeBewteenReportsInSeconds;
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(sscondsBewteenReports, 0, nameof(sscondsBewteenReports));
+        TimeZoneInfo timeZoneInfo = TimeZoneInfo.GetSystemTimeZones().FirstOrDefault(x => x.Id == timeZoneId || x.StandardName == timeZoneId)
+            ?? throw new ArgumentException($"TimeZoneId ({timeZoneId}) is invalid");
+        this.TimeZone = timeZoneInfo!;
+        this.SecondsBetweenReports = TimeSpan.FromSeconds(sscondsBewteenReports);
     }
 }

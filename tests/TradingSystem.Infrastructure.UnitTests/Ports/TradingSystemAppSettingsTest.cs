@@ -29,7 +29,7 @@ public sealed class TradingSystemAppSettingsTest
     public void ShouldFailsWhenTimeBewteenReportsInSecondsIsZero()
     {
         // Arrange
-        Action act = () => _ = new TradingSystemAppSettings(timeBewteenReportsInSeconds: -1);
+        Action act = () => _ = new TradingSystemAppSettings(sscondsBewteenReports: -1);
 
         // Act & Assert
         act.Should().Throw<ArgumentOutOfRangeException>();
@@ -39,25 +39,29 @@ public sealed class TradingSystemAppSettingsTest
     public void ShouldCreateAnInstance()
     {
         // Arrange
-        string timeZoneId = "Central Africa Time";
-        int timeBewteenReportsInSeconds = 1;
-        TradingSystemAppSettings tradingSystemAppSettings = new(timeZoneId: timeZoneId, timeBewteenReportsInSeconds: timeBewteenReportsInSeconds);
+        TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
+        TimeSpan secondsBewteenReports = TimeSpan.FromSeconds(1);
+        TradingSystemAppSettings tradingSystemAppSettings = new(
+            timeZoneId: timeZoneInfo.Id, sscondsBewteenReports: secondsBewteenReports.Seconds
+        );
 
         // Assert
         tradingSystemAppSettings.Should().NotBeNull();
-        tradingSystemAppSettings.TimeZoneId.Should().Be(timeZoneId);
-        tradingSystemAppSettings.TimeBewteenReportsInSeconds.Should().Be(timeBewteenReportsInSeconds);
+        tradingSystemAppSettings.TimeZone.Should().Be(timeZoneInfo);
+        tradingSystemAppSettings.SecondsBetweenReports.Should().Be(secondsBewteenReports);
     }
 
     [Fact]
     public void ShouldCreateAnInstanceWithDefaultValues()
     {
         // Arrange
+        TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(TradingSystemAppSettings.DefaultTimeZoneId);
+        TimeSpan secondsBewteenReports = TimeSpan.FromSeconds(TradingSystemAppSettings.DefaultSecondsBewteenReports);
         TradingSystemAppSettings tradingSystemAppSettings = new();
 
         // Assert
         tradingSystemAppSettings.Should().NotBeNull();
-        tradingSystemAppSettings.TimeZoneId.Should().Be(TradingSystemAppSettings.DefaultTimeZoneId);
-        tradingSystemAppSettings.TimeBewteenReportsInSeconds.Should().Be(TradingSystemAppSettings.DefaultTimeBewteenReports);
+        tradingSystemAppSettings.TimeZone.Should().Be(timeZoneInfo);
+        tradingSystemAppSettings.SecondsBetweenReports.Should().Be(secondsBewteenReports);
     }
 }

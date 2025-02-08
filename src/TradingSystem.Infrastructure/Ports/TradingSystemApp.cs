@@ -26,14 +26,16 @@ public sealed class TradingSystemApp
         {
             try
             {
-                await createInterDayReport.Execute(new CreateInterDayReportRequest(reportDate: DateTime.UtcNow));
+                await createInterDayReport.Execute(
+                    new CreateInterDayReportRequest(reportDate: DateTime.UtcNow, timeZoneId: this.settings.TimeZone.Id)
+                );
             }
             catch (Exception)
             {
             }
             finally
             {
-                await Task.Delay(TimeSpan.FromSeconds(this.settings.TimeBewteenReportsInSeconds));
+                await Task.Delay(this.settings.SecondsBetweenReports);
             }
         } while (this.isRunning);
     }
