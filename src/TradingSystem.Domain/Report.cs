@@ -10,9 +10,9 @@ public sealed class Report
 
     public readonly DateTime Date;
 
-    public readonly int Offset;
+    public readonly TimeSpan Offset;
 
-    public Report(DateTime createdAt, DateTime date, int offset = 0)
+    public Report(DateTime createdAt, DateTime date, TimeSpan offset)
     {
         if (createdAt.Kind != DateTimeKind.Utc)
         {
@@ -26,18 +26,20 @@ public sealed class Report
 
         ArgumentOutOfRangeException.ThrowIfLessThan(date, createdAt, nameof(date));
 
-        this.Date = date;
-        this.CreatedAt = createdAt;
-        this.Offset = offset;
+        Date = date;
+        CreatedAt = createdAt;
+        Offset = offset;
     }
 
-    public Report(DateTime date, int offset) : this(date: date, createdAt: DateTime.UtcNow, offset: offset) { }
+    public Report(DateTime date, TimeSpan offset) : this(date: date, createdAt: DateTime.UtcNow, offset: offset) { }
+
+    public Report(DateTime date, DateTime createdAt) : this(createdAt: createdAt, date: date, offset: TimeSpan.Zero) { }
 
     public string ReportName => $"PowerPosition_{this.Date:yyyyMMdd}_{this.CreatedAt:yyyyMMddHHmm}.csv";
 
     public IEnumerable<ReportPosition> GetPositions()
     {
-        DateTime baseLine = new(this.CreatedAt.Year, this.CreatedAt.Month, this.CreatedAt.Day, this.CreatedAt.Hour + this.Offset, 0, 0);
+        DateTime baseLine = new DateTime(CreatedAt.Year, CreatedAt.Month, CreatedAt.Day, CreatedAt.Hour, 0, 0).AddHours(this.Offset.Hours);
 
         return this.volumes.Select((volume, offset) => new ReportPosition(baseLine.AddHours(offset + 1), volume));
     }

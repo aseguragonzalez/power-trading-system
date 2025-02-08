@@ -37,7 +37,7 @@ public class CsvReportRepositoryTest
         // Arrange
         CsvReportRepositorySettings settings = new(directory: "reports");
         CsvReportRepository repository = new(settings);
-        Report report = new(date: DateTime.UtcNow.AddDays(1), offset: 0);
+        Report report = new(date: DateTime.UtcNow.AddDays(1), offset: TimeSpan.Zero);
         report.AddTradePositions(new TradePositions(
             [
                 new TradePosition(1, 100),
@@ -67,7 +67,7 @@ public class CsvReportRepositoryTest
         string directoryPath = $"./reports_{DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)}";
         CsvReportRepositorySettings settings = new(directory: directoryPath);
         CsvReportRepository repository = new(settings);
-        Report report = new(date: DateTime.UtcNow.AddDays(1), offset: 0);
+        Report report = new(date: DateTime.UtcNow.AddDays(1), offset: TimeSpan.Zero);
         report.AddTradePositions(new TradePositions(
             [
                 new TradePosition(1, 100),

@@ -91,6 +91,6 @@ public class CreateInterDayReportTest
         await createInterDayReport.Execute(createInterDayReportRequest);
 
         // Assert
-        await reportRepository.Received().Save(Arg.Is<Report>(report => report.Offset == timeZoneInfo.BaseUtcOffset.Hours));
+        await reportRepository.Received().Save(Arg.Is<Report>(report => report.Offset == timeZoneInfo.BaseUtcOffset));
     }
 }

@@ -20,7 +20,7 @@ public sealed class CreateInterDayReport : ICreateInterDayReport
     {
         TimeSpan offset = createInterDayReportRequest.TimeZone.GetUtcOffset(createInterDayReportRequest.ReportDate);
         TradePositions positions = await tradeService.GetPositionsByDate(createInterDayReportRequest.ReportDate);
-        Report report = new(createInterDayReportRequest.ReportDate, offset: offset.Hours);
+        Report report = new(createInterDayReportRequest.ReportDate, offset);
         report.AddTradePositions(positions);
         await reportRepository.Save(report);
     }
