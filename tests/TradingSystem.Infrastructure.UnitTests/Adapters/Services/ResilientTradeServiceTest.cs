@@ -2,9 +2,9 @@ using Axpo;
 using FluentAssertions;
 using NSubstitute;
 using TradingSystem.Domain.Services;
-using TradingSystem.Infrastructure.Services;
+using TradingSystem.Infrastructure.Adapters.Services;
 
-namespace TradingSystem.Infrastructure.UnitTests.Services;
+namespace TradingSystem.Infrastructure.UnitTests.Adapters.Services;
 
 public class ResilientTradeServiceTest
 {
@@ -22,7 +22,7 @@ public class ResilientTradeServiceTest
     public void ShouldFailsWhenInnerServiceIsMissing()
     {
         // Arrange
-        ResilientTradeServiceSettings settings = new(delayBetweenRetries: 0);
+        ResilientTradeServiceSettings settings = new(secondsBetweenRetries: 0);
         Action act = () => _ = new ResilientTradeService(settings, innerService: null!);
 
         // Act and Assert
@@ -33,7 +33,7 @@ public class ResilientTradeServiceTest
     public void ShouldCreateAnInstance()
     {
         // Act
-        ResilientTradeServiceSettings settings = new(delayBetweenRetries: 0);
+        ResilientTradeServiceSettings settings = new(secondsBetweenRetries: 0);
         ResilientTradeService service = new(settings, Substitute.For<ITradeService>());
 
         // Assert
@@ -45,7 +45,7 @@ public class ResilientTradeServiceTest
     {
         // Arrange
         DateTime date = DateTime.UtcNow;
-        ResilientTradeServiceSettings settings = new(delayBetweenRetries: 0);
+        ResilientTradeServiceSettings settings = new(secondsBetweenRetries: 0);
         ITradeService innerService = Substitute.For<ITradeService>();
         innerService.GetPositionsByDate(date).ReturnsForAnyArgs(Task.FromResult(new TradePositions()));
         ResilientTradeService service = new(settings, innerService);
@@ -65,7 +65,7 @@ public class ResilientTradeServiceTest
         int retryCount = new Random().Next(1, 3);
         var exceptionsResult = Enumerable.Range(0, retryCount).Select(_ => Task.FromException<TradePositions>(new Exception()));
         DateTime date = DateTime.UtcNow;
-        ResilientTradeServiceSettings settings = new(delayBetweenRetries: 1);
+        ResilientTradeServiceSettings settings = new(secondsBetweenRetries: 1);
         ITradeService innerService = Substitute.For<ITradeService>();
         innerService.GetPositionsByDate(date).ReturnsForAnyArgs(
             Task.FromException<TradePositions>(new Exception()),
@@ -81,6 +81,7 @@ public class ResilientTradeServiceTest
         // Act & Assert
         tradePositions.Should().NotBeNull();
         tradePositions.Positions.Should().BeEmpty();
-        stopwatch.ElapsedMilliseconds.Should().BeCloseTo(settings.DelayBetweenRetries * (retryCount + 1), delta: 10);
+        long expectedMilliseconds = settings.SecondsBetweenRetries.Seconds * (retryCount + 1) * 1000;
+        stopwatch.ElapsedMilliseconds.Should().BeCloseTo(expectedMilliseconds, delta: 100);
     }
 }

@@ -6,14 +6,10 @@ public sealed class CreateInterDayReportRequest
 
     public readonly DateTime ReportDate;
 
-    public CreateInterDayReportRequest(DateTime reportDate, string timeZoneId = "Central Europe Standard Time")
+    public CreateInterDayReportRequest(DateTime reportDate, TimeZoneInfo timeZoneInfo)
     {
-        if (string.IsNullOrWhiteSpace(timeZoneId))
-        {
-            throw new ArgumentException("Value cannot be null or whitespace.", nameof(timeZoneId));
-        }
-
+        ArgumentNullException.ThrowIfNull(timeZoneInfo, nameof(timeZoneInfo));
         this.ReportDate = reportDate;
-        this.TimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+        this.TimeZone = timeZoneInfo;
     }
 }

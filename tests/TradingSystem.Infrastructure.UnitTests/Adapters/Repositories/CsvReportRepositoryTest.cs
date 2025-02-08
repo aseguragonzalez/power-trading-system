@@ -2,9 +2,9 @@
 using FluentAssertions;
 using TradingSystem.Domain;
 using TradingSystem.Domain.Services;
-using TradingSystem.Infrastructure.Repositories;
+using TradingSystem.Infrastructure.Adapters.Repositories;
 
-namespace TradingSystem.Infrastructure.UnitTests.Repositories;
+namespace TradingSystem.Infrastructure.UnitTests.Adapters.Repositories;
 
 public class CsvReportRepositoryTest
 {

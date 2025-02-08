@@ -9,70 +9,26 @@ public class CreateInterDayReportRequestTest
     {
         // Arrange
         var reportDate = new DateTime(2021, 1, 1);
-        var timeZoneId = "Eastern Standard Time";
+        var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Europe/Lisbon");
 
         // Act
-        var createInterDayReportRequest = new CreateInterDayReportRequest(reportDate, timeZoneId);
+        var createInterDayReportRequest = new CreateInterDayReportRequest(reportDate, timeZoneInfo);
 
         // Assert
         createInterDayReportRequest.ReportDate.Should().Be(reportDate);
-        createInterDayReportRequest.TimeZone.Id.Should().Be(timeZoneId);
+        createInterDayReportRequest.TimeZone.Should().Be(timeZoneInfo);
     }
 
     [Fact]
-    public void ShouldCreateAnInstanceWithDefaultTimeZoneId()
-    {
-        // Arrange
-        var reportDate = new DateTime(2021, 1, 1);
-        var timeZoneId = "Central Europe Standard Time";
-
-        // Act
-        var createInterDayReportRequest = new CreateInterDayReportRequest(reportDate);
-
-        // Assert
-        createInterDayReportRequest.ReportDate.Should().Be(reportDate);
-        createInterDayReportRequest.TimeZone.Id.Should().Be(timeZoneId);
-    }
-
-    [Fact]
-    public void ShouldFailsWhenTimeZoneIdIsInvalid()
-    {
-        // Arrange
-        var reportDate = new DateTime(2021, 1, 1);
-        var timeZoneId = "fake-time-zone";
-
-        // Act
-        Action act = () => _ = new CreateInterDayReportRequest(reportDate, timeZoneId);
-
-        // Assert
-        act.Should().Throw<TimeZoneNotFoundException>();
-    }
-
-    [Fact]
-    public void ShouldFailsWhenTimeZoneIdIsNull()
+    public void ShouldFailsWhenTimeZoneIsNull()
     {
         // Arrange
         DateTime reportDate = new(2021, 1, 1);
-        string? timeZoneId = null!;
 
         // Act
-        Action act = () => _ = new CreateInterDayReportRequest(reportDate, timeZoneId);
+        Action act = () => _ = new CreateInterDayReportRequest(reportDate, timeZoneInfo: null!);
 
         // Assert
-        act.Should().Throw<ArgumentException>().WithMessage("Value cannot be null or whitespace. (Parameter 'timeZoneId')");
-    }
-
-    [Fact]
-    public void ShouldFailsWhenTimeZoneIdIsEmpty()
-    {
-        // Arrange
-        DateTime reportDate = new(2021, 1, 1);
-        string timeZoneId = ""!;
-
-        // Act
-        Action act = () => _ = new CreateInterDayReportRequest(reportDate, timeZoneId);
-
-        // Assert
-        act.Should().Throw<ArgumentException>().WithMessage("Value cannot be null or whitespace. (Parameter 'timeZoneId')");
+        act.Should().Throw<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'timeZoneInfo')");
     }
 }

@@ -3,7 +3,7 @@ using TradingSystem.Domain.Services;
 
 namespace TradingSystem.Application;
 
-public sealed class CreateInterDayReport
+public sealed class CreateInterDayReport : ICreateInterDayReport
 {
     private readonly ITradeService tradeService;
     private readonly IReportRepository reportRepository;
@@ -16,11 +16,11 @@ public sealed class CreateInterDayReport
         this.reportRepository = reportRepository;
     }
 
-    public async Task Execute(CreateInterDayReportRequest request)
+    public async Task Execute(CreateInterDayReportRequest createInterDayReportRequest)
     {
-        TimeSpan offset = request.TimeZone.GetUtcOffset(request.ReportDate);
-        TradePositions positions = await tradeService.GetPositionsByDate(request.ReportDate);
-        Report report = new(request.ReportDate, offset: offset.Hours);
+        TimeSpan offset = createInterDayReportRequest.TimeZone.GetUtcOffset(createInterDayReportRequest.ReportDate);
+        TradePositions positions = await tradeService.GetPositionsByDate(createInterDayReportRequest.ReportDate);
+        Report report = new(createInterDayReportRequest.ReportDate, offset: offset.Hours);
         report.AddTradePositions(positions);
         await reportRepository.Save(report);
     }
