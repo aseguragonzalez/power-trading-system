@@ -14,7 +14,7 @@ public class ReportTest
         Action act = () => _ = new Report(createdAt: createdAt, date: date);
 
         // Act & Assert
-        act.Should().Throw<ArgumentOutOfRangeException>().WithMessage("Date cannot be in the past. (Parameter 'date')");
+        act.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]

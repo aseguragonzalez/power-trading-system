@@ -8,11 +8,8 @@ public sealed class TradePosition
 
     public TradePosition(int periodId, double volume)
     {
-        if (periodId < 1 || periodId > 24)
-        {
-            throw new ArgumentOutOfRangeException(nameof(periodId), "PeriodId must be between 1 and 24");
-        }
-
+        ArgumentOutOfRangeException.ThrowIfLessThan(periodId, 1, nameof(periodId));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(periodId, 24, nameof(periodId));
         PeriodId = periodId;
         Volume = volume;
     }

@@ -24,10 +24,7 @@ public sealed class Report
             throw new ArgumentOutOfRangeException(nameof(date), "Date must be in UTC.");
         }
 
-        if (date < createdAt)
-        {
-            throw new ArgumentOutOfRangeException(nameof(date), "Date cannot be in the past.");
-        }
+        ArgumentOutOfRangeException.ThrowIfLessThan(date, createdAt, nameof(date));
 
         this.Date = date;
         this.CreatedAt = createdAt;
