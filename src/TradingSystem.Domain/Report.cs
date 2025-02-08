@@ -4,7 +4,9 @@ namespace TradingSystem.Domain;
 
 public sealed class Report
 {
-    private readonly double[] volumes = new double[24];
+    private const int MaxPeriods = 24;
+
+    private readonly double[] volumes = new double[MaxPeriods];
 
     public readonly DateTime CreatedAt;
 
