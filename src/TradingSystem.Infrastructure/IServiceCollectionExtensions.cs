@@ -1,4 +1,5 @@
 using Axpo;
+using Microsoft.Extensions.Logging;
 using TradingSystem.Domain.Repositories;
 using TradingSystem.Domain.Services;
 using TradingSystem.Infrastructure.Adapters.Repositories;
@@ -15,7 +16,9 @@ public static class IServiceCollectionExtensions
             .AddSingleton<IPowerService, PowerService>()
             .AddSingleton<TradeService, TradeService>()
             .AddSingleton<ITradeService>(sp => new ResilientTradeService(
-                sp.GetRequiredService<ResilientTradeServiceSettings>(), sp.GetRequiredService<TradeService>()
+                sp.GetRequiredService<ResilientTradeServiceSettings>(),
+                sp.GetRequiredService<TradeService>(),
+                sp.GetRequiredService<ILogger<ResilientTradeService>>()
             ));
 
     public static IServiceCollection AddCsvReportRepositorySettings(this IServiceCollection services, string? path) =>
