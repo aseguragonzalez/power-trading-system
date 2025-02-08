@@ -1,7 +1,7 @@
 using Axpo;
 using TradingSystem.Domain.Services;
 
-namespace TradingSystem.Infrastructure.Services;
+namespace TradingSystem.Infrastructure.Adapters.Services;
 
 public sealed class TradeService : ITradeService
 {

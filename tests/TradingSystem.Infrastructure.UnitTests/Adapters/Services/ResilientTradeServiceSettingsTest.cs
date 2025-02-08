@@ -1,7 +1,7 @@
 using FluentAssertions;
-using TradingSystem.Infrastructure.Services;
+using TradingSystem.Infrastructure.Adapters.Services;
 
-namespace TradingSystem.Infrastructure.UnitTests.Services;
+namespace TradingSystem.Infrastructure.UnitTests.Adapters.Services;
 
 public class ResilientTradeServiceSettingsTest
 {

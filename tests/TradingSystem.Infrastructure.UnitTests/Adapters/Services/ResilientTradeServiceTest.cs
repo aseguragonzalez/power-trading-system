@@ -2,9 +2,9 @@ using Axpo;
 using FluentAssertions;
 using NSubstitute;
 using TradingSystem.Domain.Services;
-using TradingSystem.Infrastructure.Services;
+using TradingSystem.Infrastructure.Adapters.Services;
 
-namespace TradingSystem.Infrastructure.UnitTests.Services;
+namespace TradingSystem.Infrastructure.UnitTests.Adapters.Services;
 
 public class ResilientTradeServiceTest
 {

@@ -1,4 +1,4 @@
-namespace TradingSystem.Infrastructure.Services;
+namespace TradingSystem.Infrastructure.Adapters.Services;
 
 public sealed class ResilientTradeServiceSettings
 {

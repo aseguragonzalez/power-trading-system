@@ -1,4 +1,4 @@
-namespace TradingSystem.Infrastructure.Repositories;
+namespace TradingSystem.Infrastructure.Adapters.Repositories;
 
 public sealed class CsvReportRepositorySettings
 {

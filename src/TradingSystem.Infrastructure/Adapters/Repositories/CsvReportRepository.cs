@@ -1,7 +1,7 @@
 using System.Globalization;
 using TradingSystem.Domain;
 
-namespace TradingSystem.Infrastructure.Repositories;
+namespace TradingSystem.Infrastructure.Adapters.Repositories;
 
 public sealed class CsvReportRepository : IReportRepository
 {
