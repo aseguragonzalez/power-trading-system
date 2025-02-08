@@ -3,7 +3,7 @@ using TradingSystem.Domain.Services;
 
 namespace TradingSystem.Application;
 
-public sealed class CreateInterDayReport
+public sealed class CreateInterDayReport : ICreateInterDayReport
 {
     private readonly ITradeService tradeService;
     private readonly IReportRepository reportRepository;

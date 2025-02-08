@@ -8,11 +8,7 @@ public sealed class CreateInterDayReportRequest
 
     public CreateInterDayReportRequest(DateTime reportDate, string timeZoneId = "Central Europe Standard Time")
     {
-        if (string.IsNullOrWhiteSpace(timeZoneId))
-        {
-            throw new ArgumentException("Value cannot be null or whitespace.", nameof(timeZoneId));
-        }
-
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(timeZoneId, nameof(timeZoneId));
         this.ReportDate = reportDate;
         this.TimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
     }

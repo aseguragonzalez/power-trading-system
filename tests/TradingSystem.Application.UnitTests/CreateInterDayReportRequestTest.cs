@@ -59,7 +59,7 @@ public class CreateInterDayReportRequestTest
         Action act = () => _ = new CreateInterDayReportRequest(reportDate, timeZoneId);
 
         // Assert
-        act.Should().Throw<ArgumentException>().WithMessage("Value cannot be null or whitespace. (Parameter 'timeZoneId')");
+        act.Should().Throw<ArgumentException>().WithMessage("Value cannot be null. (Parameter 'timeZoneId')");
     }
 
     [Fact]
@@ -73,6 +73,7 @@ public class CreateInterDayReportRequestTest
         Action act = () => _ = new CreateInterDayReportRequest(reportDate, timeZoneId);
 
         // Assert
-        act.Should().Throw<ArgumentException>().WithMessage("Value cannot be null or whitespace. (Parameter 'timeZoneId')");
+        act.Should().Throw<ArgumentException>()
+            .WithMessage("The value cannot be an empty string or composed entirely of whitespace. (Parameter 'timeZoneId')");
     }
 }
