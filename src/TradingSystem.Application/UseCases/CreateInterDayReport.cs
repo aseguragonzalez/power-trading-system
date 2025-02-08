@@ -1,4 +1,3 @@
-using TradingSystem.Domain;
 using TradingSystem.Domain.Entities;
 using TradingSystem.Domain.Repositories;
 using TradingSystem.Domain.Services;

@@ -1,5 +1,4 @@
 using System.Globalization;
-using TradingSystem.Domain;
 using TradingSystem.Domain.Entities;
 using TradingSystem.Domain.Repositories;
 
