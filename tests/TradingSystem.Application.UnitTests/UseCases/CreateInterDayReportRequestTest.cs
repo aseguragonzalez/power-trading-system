@@ -1,6 +1,7 @@
 using FluentAssertions;
+using TradingSystem.Application.UseCases;
 
-namespace TradingSystem.Application.UnitTests;
+namespace TradingSystem.Application.UnitTests.UseCases;
 
 public class CreateInterDayReportRequestTest
 {

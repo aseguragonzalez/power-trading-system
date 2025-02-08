@@ -1,4 +1,4 @@
-namespace TradingSystem.Application;
+namespace TradingSystem.Application.UseCases;
 
 public interface ICreateInterDayReport
 {

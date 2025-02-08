@@ -1,9 +1,10 @@
 ﻿using FluentAssertions;
 using NSubstitute;
+using TradingSystem.Application.UseCases;
 using TradingSystem.Domain;
 using TradingSystem.Domain.Services;
 
-namespace TradingSystem.Application.UnitTests;
+namespace TradingSystem.Application.UnitTests.UseCases;
 
 public class CreateInterDayReportTest
 {

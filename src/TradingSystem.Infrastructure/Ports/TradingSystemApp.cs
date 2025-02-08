@@ -1,4 +1,4 @@
-using TradingSystem.Application;
+using TradingSystem.Application.UseCases;
 
 namespace TradingSystem.Infrastructure.Ports;
 

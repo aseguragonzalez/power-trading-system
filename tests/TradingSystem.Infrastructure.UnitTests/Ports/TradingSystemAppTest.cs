@@ -1,7 +1,6 @@
 using FluentAssertions;
 using NSubstitute;
-using NSubstitute.Exceptions;
-using TradingSystem.Application;
+using TradingSystem.Application.UseCases;
 using TradingSystem.Infrastructure.Ports;
 
 namespace TradingSystem.Infrastructure.UnitTests.Ports;

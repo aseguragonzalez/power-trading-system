@@ -1,7 +1,7 @@
 using TradingSystem.Domain;
 using TradingSystem.Domain.Services;
 
-namespace TradingSystem.Application;
+namespace TradingSystem.Application.UseCases;
 
 public sealed class CreateInterDayReport : ICreateInterDayReport
 {
