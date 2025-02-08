@@ -19,22 +19,27 @@ public sealed class TradingSystemApp
         this.isRunning = false;
     }
 
-    public async Task Start()
+    public async Task Start(CancellationToken cancellationToken = default)
     {
         this.isRunning = true;
         do
         {
+            cancellationToken.ThrowIfCancellationRequested();
             try
             {
-                await createInterDayReport.Execute(
-                    new CreateInterDayReportRequest(reportDate: DateTime.UtcNow, this.settings.TimeZone)
-                );
+                CreateInterDayReportRequest createInterDayReportRequest = new(DateTime.UtcNow, this.settings.TimeZone);
+                await this.createInterDayReport.Execute(createInterDayReportRequest, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                // Log the cancellation
+                this.isRunning = false;
             }
             catch (Exception)
             {
                 // Log the exception
             }
-            await Task.Delay(this.settings.SecondsBetweenReports);
+            await Task.Delay(this.settings.SecondsBetweenReports, cancellationToken);
 
         } while (this.isRunning);
     }

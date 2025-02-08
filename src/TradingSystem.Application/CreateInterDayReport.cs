@@ -6,6 +6,7 @@ namespace TradingSystem.Application;
 public sealed class CreateInterDayReport : ICreateInterDayReport
 {
     private readonly ITradeService tradeService;
+
     private readonly IReportRepository reportRepository;
 
     public CreateInterDayReport(ITradeService tradeService, IReportRepository reportRepository)
@@ -16,12 +17,12 @@ public sealed class CreateInterDayReport : ICreateInterDayReport
         this.reportRepository = reportRepository;
     }
 
-    public async Task Execute(CreateInterDayReportRequest createInterDayReportRequest)
+    public async Task Execute(CreateInterDayReportRequest createInterDayReportRequest, CancellationToken cancellationToken = default)
     {
         TimeSpan offset = createInterDayReportRequest.TimeZone.GetUtcOffset(createInterDayReportRequest.ReportDate);
-        TradePositions positions = await tradeService.GetPositionsByDate(createInterDayReportRequest.ReportDate);
+        TradePositions positions = await tradeService.GetPositionsByDate(createInterDayReportRequest.ReportDate, cancellationToken);
         Report report = new(createInterDayReportRequest.ReportDate, offset);
         report.AddTradePositions(positions);
-        await reportRepository.Save(report);
+        await reportRepository.Save(report, cancellationToken);
     }
 }

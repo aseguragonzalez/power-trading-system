@@ -2,5 +2,5 @@ namespace TradingSystem.Domain;
 
 public interface IReportRepository
 {
-    Task Save(Report report);
+    Task Save(Report report, CancellationToken cancellationToken = default);
 }

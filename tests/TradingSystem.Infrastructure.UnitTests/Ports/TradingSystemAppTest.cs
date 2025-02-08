@@ -54,7 +54,7 @@ public sealed class TradingSystemAppTest
         TradingSystemApp tradingSystemApp = new(settings, createInterDayReport);
 
         // Act
-        _ = Task.Run(tradingSystemApp.Start);
+        _ = Task.Run(async () => await tradingSystemApp.Start());
 
         // Assert
         tradingSystemApp.Stop();
@@ -73,7 +73,7 @@ public sealed class TradingSystemAppTest
         TradingSystemApp tradingSystemApp = new(settings, createInterDayReport);
 
         // Act
-        _ = Task.Run(tradingSystemApp.Start);
+        _ = Task.Run(async () => await tradingSystemApp.Start());
 
         // Assert
         await Task.Delay(2000);
