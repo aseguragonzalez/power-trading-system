@@ -45,21 +45,4 @@ public class TradeServiceTest
         tradePositions.Should().NotBeNull();
         tradePositions.Positions.Should().HaveCount(trades.Periods.Count());
     }
-
-    [Fact]
-    public async Task PowerServicePlayGround()
-    {
-        IPowerService powerService = new PowerService();
-        try
-        {
-            DateTime dateTime = DateTime.UtcNow;
-            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
-            var local = TimeZoneInfo.ConvertTimeFromUtc(dateTime, timeZoneInfo);
-            var powerTrades = await powerService.GetTradesAsync(local);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
 }

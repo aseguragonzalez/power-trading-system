@@ -69,4 +69,24 @@ public class CreateInterDayReportTest
         // Assert
         await reportRepository.Received().Save(Arg.Is<Report>(report => report.Date == date));
     }
+
+    [Fact]
+    public async Task ShouldApplyOffsetWhenUseCustomTimeZoneId()
+    {
+        // Arrange
+        string timeZoneId = "Pacific Standard Time"; // Pacific Standard Time is UTC-8
+        ITradeService tradeService = Substitute.For<ITradeService>();
+        IReportRepository reportRepository = Substitute.For<IReportRepository>();
+        CreateInterDayReport createInterDayReport = new(tradeService, reportRepository);
+        DateTime createdAt = DateTime.UtcNow;
+        DateTime date = createdAt.AddDays(1);
+        tradeService.GetPositionsByDate(date).Returns(new TradePositions());
+
+        // Act
+        await createInterDayReport.Execute(new CreateInterDayReportRequest(date, timeZoneId: timeZoneId));
+
+        // Assert
+        await reportRepository.Received().Save(Arg.Is<Report>(report => report.Offset == -8));
+    }
+
 }

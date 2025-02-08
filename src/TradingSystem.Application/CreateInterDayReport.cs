@@ -18,8 +18,9 @@ public sealed class CreateInterDayReport
 
     public async Task Execute(CreateInterDayReportRequest request)
     {
+        TimeSpan offset = request.TimeZone.GetUtcOffset(request.ReportDate);
         TradePositions positions = await tradeService.GetPositionsByDate(request.ReportDate);
-        Report report = new(request.ReportDate, offset: 0);
+        Report report = new(request.ReportDate, offset: offset.Hours);
         report.AddTradePositions(positions);
         await reportRepository.Save(report);
     }
