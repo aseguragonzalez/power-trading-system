@@ -12,7 +12,6 @@ public sealed class ResilientTradeService : ITradeService
     {
         ArgumentNullException.ThrowIfNull(settings);
         ArgumentNullException.ThrowIfNull(innerService);
-
         this.innerService = innerService;
         this.settings = settings;
     }
@@ -29,7 +28,7 @@ public sealed class ResilientTradeService : ITradeService
             }
             catch
             {
-                await Task.Delay(this.settings.DelayBetweenRetries);
+                await Task.Delay(this.settings.SecondsBetweenRetries);
             }
         } while (tradePositions is null);
         return tradePositions!;

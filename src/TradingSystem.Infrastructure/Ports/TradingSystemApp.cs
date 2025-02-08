@@ -32,11 +32,10 @@ public sealed class TradingSystemApp
             }
             catch (Exception)
             {
+                // Log the exception
             }
-            finally
-            {
-                await Task.Delay(this.settings.SecondsBetweenReports);
-            }
+            await Task.Delay(this.settings.SecondsBetweenReports);
+
         } while (this.isRunning);
     }
 

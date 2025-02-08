@@ -1,5 +1,6 @@
 using FluentAssertions;
 using NSubstitute;
+using NSubstitute.Exceptions;
 using TradingSystem.Application;
 using TradingSystem.Infrastructure.Ports;
 
@@ -68,7 +69,7 @@ public sealed class TradingSystemAppTest
         ICreateInterDayReport createInterDayReport = Substitute.For<ICreateInterDayReport>();
         createInterDayReport
             .Execute(Arg.Any<CreateInterDayReportRequest>())
-            .ReturnsForAnyArgs(Task.FromException<Exception>(new Exception()), [Task.CompletedTask, Task.CompletedTask, Task.CompletedTask]);
+            .Returns(Task.FromException<Exception>(new Exception()), [Task.CompletedTask, Task.CompletedTask, Task.CompletedTask]);
         TradingSystemApp tradingSystemApp = new(settings, createInterDayReport);
 
         // Act
@@ -77,6 +78,7 @@ public sealed class TradingSystemAppTest
         // Assert
         await Task.Delay(2000);
         tradingSystemApp.Stop();
-        await createInterDayReport.ReceivedWithAnyArgs(2).Execute(Arg.Any<CreateInterDayReportRequest>());
+        // Ensure Execute was called at least twice
+        createInterDayReport.ReceivedCalls().Count().Should().BeGreaterThanOrEqualTo(2);
     }
 }

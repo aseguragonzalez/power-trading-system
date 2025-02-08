@@ -2,14 +2,11 @@ namespace TradingSystem.Infrastructure.Adapters.Services;
 
 public sealed class ResilientTradeServiceSettings
 {
-    public readonly int DelayBetweenRetries;
+    public readonly TimeSpan SecondsBetweenRetries;
 
-    public ResilientTradeServiceSettings(int delayBetweenRetries)
+    public ResilientTradeServiceSettings(int secondsBetweenRetries)
     {
-        if (delayBetweenRetries < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(delayBetweenRetries));
-        }
-        this.DelayBetweenRetries = delayBetweenRetries;
+        ArgumentOutOfRangeException.ThrowIfNegative(secondsBetweenRetries, nameof(secondsBetweenRetries));
+        SecondsBetweenRetries = TimeSpan.FromSeconds(secondsBetweenRetries);
     }
 }

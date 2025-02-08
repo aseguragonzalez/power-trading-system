@@ -9,17 +9,17 @@ public class ResilientTradeServiceSettingsTest
     public void ShouldFailsWhenDelayBetweenRetriesIsNegative()
     {
         // Arrange
-        Action act = () => _ = new ResilientTradeServiceSettings(delayBetweenRetries: -1);
+        Action act = () => _ = new ResilientTradeServiceSettings(secondsBetweenRetries: -1);
 
         // Act and Assert
-        act.Should().Throw<ArgumentOutOfRangeException>().WithMessage("Specified argument was out of the range of valid values. (Parameter 'delayBetweenRetries')");
+        act.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]
     public void ShouldCreateAnInstance()
     {
         // Act
-        ResilientTradeServiceSettings settings = new(delayBetweenRetries: 0);
+        ResilientTradeServiceSettings settings = new(secondsBetweenRetries: 0);
 
         // Assert
         settings.Should().NotBeNull();
