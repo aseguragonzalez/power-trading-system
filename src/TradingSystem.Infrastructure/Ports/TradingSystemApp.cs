@@ -27,7 +27,7 @@ public sealed class TradingSystemApp
             try
             {
                 await createInterDayReport.Execute(
-                    new CreateInterDayReportRequest(reportDate: DateTime.UtcNow, timeZoneId: this.settings.TimeZone.Id)
+                    new CreateInterDayReportRequest(reportDate: DateTime.UtcNow, this.settings.TimeZone)
                 );
             }
             catch (Exception)

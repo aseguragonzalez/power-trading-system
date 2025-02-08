@@ -29,7 +29,7 @@ public sealed class TradingSystemAppSettingsTest
     public void ShouldFailsWhenTimeBewteenReportsInSecondsIsZero()
     {
         // Arrange
-        Action act = () => _ = new TradingSystemAppSettings(sscondsBewteenReports: -1);
+        Action act = () => _ = new TradingSystemAppSettings(secondsBetweenReports: -1);
 
         // Act & Assert
         act.Should().Throw<ArgumentOutOfRangeException>();
@@ -42,7 +42,7 @@ public sealed class TradingSystemAppSettingsTest
         TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
         TimeSpan secondsBewteenReports = TimeSpan.FromSeconds(1);
         TradingSystemAppSettings tradingSystemAppSettings = new(
-            timeZoneId: timeZoneInfo.Id, sscondsBewteenReports: secondsBewteenReports.Seconds
+            timeZoneId: timeZoneInfo.Id, secondsBetweenReports: secondsBewteenReports.Seconds
         );
 
         // Assert
@@ -56,7 +56,7 @@ public sealed class TradingSystemAppSettingsTest
     {
         // Arrange
         TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(TradingSystemAppSettings.DefaultTimeZoneId);
-        TimeSpan secondsBewteenReports = TimeSpan.FromSeconds(TradingSystemAppSettings.DefaultSecondsBewteenReports);
+        TimeSpan secondsBewteenReports = TimeSpan.FromSeconds(TradingSystemAppSettings.DefaultSecondsBetweenReports);
         TradingSystemAppSettings tradingSystemAppSettings = new();
 
         // Assert

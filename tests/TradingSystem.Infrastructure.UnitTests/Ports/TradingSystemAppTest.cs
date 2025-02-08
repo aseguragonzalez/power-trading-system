@@ -64,7 +64,7 @@ public sealed class TradingSystemAppTest
     public async Task ShouldContinuesWhenSomeExceptionHappends()
     {
         // Arrange
-        TradingSystemAppSettings settings = new(sscondsBewteenReports: 1);
+        TradingSystemAppSettings settings = new(secondsBetweenReports: 1);
         ICreateInterDayReport createInterDayReport = Substitute.For<ICreateInterDayReport>();
         createInterDayReport
             .Execute(Arg.Any<CreateInterDayReportRequest>())

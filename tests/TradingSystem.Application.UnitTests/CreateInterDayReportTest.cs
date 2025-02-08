@@ -7,6 +7,8 @@ namespace TradingSystem.Application.UnitTests;
 
 public class CreateInterDayReportTest
 {
+    private const string TimeZoneId = "Europe/Madrid";
+
     [Fact]
     public void ShouldFailsWhenReportRepositoryIsNull()
     {
@@ -59,12 +61,14 @@ public class CreateInterDayReportTest
         ITradeService tradeService = Substitute.For<ITradeService>();
         IReportRepository reportRepository = Substitute.For<IReportRepository>();
         CreateInterDayReport createInterDayReport = new(tradeService, reportRepository);
+        TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId);
         DateTime createdAt = DateTime.UtcNow;
         DateTime date = createdAt.AddDays(1);
         tradeService.GetPositionsByDate(date).Returns(new TradePositions());
+        CreateInterDayReportRequest createInterDayReportRequest = new(date, timeZoneInfo);
 
         // Act
-        await createInterDayReport.Execute(new CreateInterDayReportRequest(date));
+        await createInterDayReport.Execute(createInterDayReportRequest);
 
         // Assert
         await reportRepository.Received().Save(Arg.Is<Report>(report => report.Date == date));
@@ -74,19 +78,19 @@ public class CreateInterDayReportTest
     public async Task ShouldApplyOffsetWhenUseCustomTimeZoneId()
     {
         // Arrange
-        string timeZoneId = "Pacific Standard Time"; // Pacific Standard Time is UTC-8
         ITradeService tradeService = Substitute.For<ITradeService>();
         IReportRepository reportRepository = Substitute.For<IReportRepository>();
         CreateInterDayReport createInterDayReport = new(tradeService, reportRepository);
+        TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId);
         DateTime createdAt = DateTime.UtcNow;
         DateTime date = createdAt.AddDays(1);
         tradeService.GetPositionsByDate(date).Returns(new TradePositions());
+        CreateInterDayReportRequest createInterDayReportRequest = new(date, timeZoneInfo);
 
         // Act
-        await createInterDayReport.Execute(new CreateInterDayReportRequest(date, timeZoneId: timeZoneId));
+        await createInterDayReport.Execute(createInterDayReportRequest);
 
         // Assert
-        await reportRepository.Received().Save(Arg.Is<Report>(report => report.Offset == -8));
+        await reportRepository.Received().Save(Arg.Is<Report>(report => report.Offset == timeZoneInfo.BaseUtcOffset.Hours));
     }
-
 }
