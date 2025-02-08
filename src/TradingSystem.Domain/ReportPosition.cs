@@ -6,9 +6,9 @@ public sealed class ReportPosition
 
     public readonly double Volume;
 
-    public ReportPosition(DateTime slot, double volume)
+    public ReportPosition(DateTime period, double volume)
     {
-        Period = slot;
+        Period = period;
         Volume = volume;
     }
 
