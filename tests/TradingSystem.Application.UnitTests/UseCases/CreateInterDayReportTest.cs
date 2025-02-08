@@ -2,6 +2,8 @@
 using NSubstitute;
 using TradingSystem.Application.UseCases;
 using TradingSystem.Domain;
+using TradingSystem.Domain.Entities;
+using TradingSystem.Domain.Repositories;
 using TradingSystem.Domain.Services;
 
 namespace TradingSystem.Application.UnitTests.UseCases;

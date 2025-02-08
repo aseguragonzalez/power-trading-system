@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using FluentAssertions;
-using TradingSystem.Domain;
+using TradingSystem.Domain.Entities;
 using TradingSystem.Domain.Services;
 using TradingSystem.Infrastructure.Adapters.Repositories;
 

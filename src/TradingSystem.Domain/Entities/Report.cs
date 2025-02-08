@@ -1,6 +1,6 @@
 ﻿using TradingSystem.Domain.Services;
 
-namespace TradingSystem.Domain;
+namespace TradingSystem.Domain.Entities;
 
 public sealed class Report
 {

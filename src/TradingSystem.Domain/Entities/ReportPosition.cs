@@ -1,4 +1,4 @@
-namespace TradingSystem.Domain;
+namespace TradingSystem.Domain.Entities;
 
 public sealed class ReportPosition
 {

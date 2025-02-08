@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using TradingSystem.Domain.Entities;
 using TradingSystem.Domain.Services;
 
 namespace TradingSystem.Domain.UnitTests;
