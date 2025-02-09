@@ -1,5 +1,6 @@
-using Axpo;
+
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using TradingSystem.Domain.Services;
 using TradingSystem.Infrastructure.Adapters.Services;
@@ -12,7 +13,8 @@ public class ResilientTradeServiceTest
     public void ShouldFailsWhenSettingsIsMissing()
     {
         // Arrange
-        Action act = () => _ = new ResilientTradeService(settings: null!, Substitute.For<ITradeService>());
+        ILogger<ResilientTradeService> logger = Substitute.For<ILogger<ResilientTradeService>>();
+        Action act = () => _ = new ResilientTradeService(settings: null!, Substitute.For<ITradeService>(), logger);
 
         // Act and Assert
         act.Should().Throw<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'settings')");
@@ -22,8 +24,9 @@ public class ResilientTradeServiceTest
     public void ShouldFailsWhenInnerServiceIsMissing()
     {
         // Arrange
+        ILogger<ResilientTradeService> logger = Substitute.For<ILogger<ResilientTradeService>>();
         ResilientTradeServiceSettings settings = new(secondsBetweenRetries: 0);
-        Action act = () => _ = new ResilientTradeService(settings, innerService: null!);
+        Action act = () => _ = new ResilientTradeService(settings, innerService: null!, logger);
 
         // Act and Assert
         act.Should().Throw<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'innerService')");
@@ -33,8 +36,9 @@ public class ResilientTradeServiceTest
     public void ShouldCreateAnInstance()
     {
         // Act
+        ILogger<ResilientTradeService> logger = Substitute.For<ILogger<ResilientTradeService>>();
         ResilientTradeServiceSettings settings = new(secondsBetweenRetries: 0);
-        ResilientTradeService service = new(settings, Substitute.For<ITradeService>());
+        ResilientTradeService service = new(settings, Substitute.For<ITradeService>(), logger);
 
         // Assert
         service.Should().NotBeNull();
@@ -46,9 +50,10 @@ public class ResilientTradeServiceTest
         // Arrange
         DateTime date = DateTime.UtcNow;
         ResilientTradeServiceSettings settings = new(secondsBetweenRetries: 0);
+        ILogger<ResilientTradeService> logger = Substitute.For<ILogger<ResilientTradeService>>();
         ITradeService innerService = Substitute.For<ITradeService>();
         innerService.GetPositionsByDate(date).ReturnsForAnyArgs(Task.FromResult(new TradePositions()));
-        ResilientTradeService service = new(settings, innerService);
+        ResilientTradeService service = new(settings, innerService, logger);
 
         // Act
         TradePositions tradePositions = await service.GetPositionsByDate(DateTime.UtcNow);
@@ -66,12 +71,13 @@ public class ResilientTradeServiceTest
         var exceptionsResult = Enumerable.Range(0, retryCount).Select(_ => Task.FromException<TradePositions>(new Exception()));
         DateTime date = DateTime.UtcNow;
         ResilientTradeServiceSettings settings = new(secondsBetweenRetries: 1);
+        ILogger<ResilientTradeService> logger = Substitute.For<ILogger<ResilientTradeService>>();
         ITradeService innerService = Substitute.For<ITradeService>();
         innerService.GetPositionsByDate(date).ReturnsForAnyArgs(
             Task.FromException<TradePositions>(new Exception()),
             [.. exceptionsResult, Task.FromResult(new TradePositions())]
         );
-        ResilientTradeService service = new(settings, innerService);
+        ResilientTradeService service = new(settings, innerService, logger);
 
         // Act
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();

@@ -13,8 +13,9 @@ public sealed class TradeService : ITradeService
         this.powerService = powerService;
     }
 
-    public async Task<TradePositions> GetPositionsByDate(DateTime date)
+    public async Task<TradePositions> GetPositionsByDate(DateTime date, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         IEnumerable<PowerTrade> powerTrades = await this.powerService.GetTradesAsync(date);
         TradePositions tradePositions = new(
             positions: powerTrades.SelectMany(powerTrade =>

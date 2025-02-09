@@ -1,9 +1,12 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
-using TradingSystem.Domain;
+using TradingSystem.Application.UseCases;
+using TradingSystem.Domain.Entities;
+using TradingSystem.Domain.Repositories;
 using TradingSystem.Domain.Services;
 
-namespace TradingSystem.Application.UnitTests;
+namespace TradingSystem.Application.UnitTests.UseCases;
 
 public class CreateInterDayReportTest
 {
@@ -13,27 +16,44 @@ public class CreateInterDayReportTest
     public void ShouldFailsWhenReportRepositoryIsNull()
     {
         // Arrange
+        ILogger<CreateInterDayReport> logger = Substitute.For<ILogger<CreateInterDayReport>>();
         ITradeService tradeService = Substitute.For<ITradeService>();
         IReportRepository? reportRepository = null!;
 
         // Act
-        Action act = () => _ = new CreateInterDayReport(tradeService, reportRepository);
+        Action act = () => _ = new CreateInterDayReport(tradeService, reportRepository, logger);
 
         // Assert
         act.Should().Throw<ArgumentNullException>()
             .And.ParamName.Should().Be("reportRepository");
+    }
 
+    [Fact]
+    public void ShouldFailsWhenLoggerIsNull()
+    {
+        // Arrange
+        ILogger<CreateInterDayReport>? logger = null!;
+        ITradeService tradeService = Substitute.For<ITradeService>();
+        IReportRepository reportRepository = Substitute.For<IReportRepository>();
+
+        // Act
+        Action act = () => _ = new CreateInterDayReport(tradeService, reportRepository, logger);
+
+        // Assert
+        act.Should().Throw<ArgumentNullException>()
+            .And.ParamName.Should().Be("logger");
     }
 
     [Fact]
     public void ShouldFailsWhenTradeServiceIsNull()
     {
         // Arrange
+        ILogger<CreateInterDayReport> logger = Substitute.For<ILogger<CreateInterDayReport>>();
         ITradeService? tradeService = null!;
         IReportRepository reportRepository = Substitute.For<IReportRepository>();
 
         // Act
-        Action act = () => _ = new CreateInterDayReport(tradeService, reportRepository);
+        Action act = () => _ = new CreateInterDayReport(tradeService, reportRepository, logger);
 
         // Assert
         act.Should().Throw<ArgumentNullException>()
@@ -44,11 +64,12 @@ public class CreateInterDayReportTest
     public void ShouldCreateAnInstance()
     {
         // Arrange
+        ILogger<CreateInterDayReport> logger = Substitute.For<ILogger<CreateInterDayReport>>();
         ITradeService tradeService = Substitute.For<ITradeService>();
         IReportRepository reportRepository = Substitute.For<IReportRepository>();
 
         // Act
-        var createInterDayReport = new CreateInterDayReport(tradeService, reportRepository);
+        var createInterDayReport = new CreateInterDayReport(tradeService, reportRepository, logger);
 
         // Assert
         createInterDayReport.Should().NotBeNull();
@@ -58,9 +79,10 @@ public class CreateInterDayReportTest
     public async Task ShouldSaveTheReportWhenExecuteIsCalled()
     {
         // Arrange
+        ILogger<CreateInterDayReport> logger = Substitute.For<ILogger<CreateInterDayReport>>();
         ITradeService tradeService = Substitute.For<ITradeService>();
         IReportRepository reportRepository = Substitute.For<IReportRepository>();
-        CreateInterDayReport createInterDayReport = new(tradeService, reportRepository);
+        CreateInterDayReport createInterDayReport = new(tradeService, reportRepository, logger);
         TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId);
         DateTime createdAt = DateTime.UtcNow;
         DateTime date = createdAt.AddDays(1);
@@ -78,9 +100,10 @@ public class CreateInterDayReportTest
     public async Task ShouldApplyOffsetWhenUseCustomTimeZoneId()
     {
         // Arrange
+        ILogger<CreateInterDayReport> logger = Substitute.For<ILogger<CreateInterDayReport>>();
         ITradeService tradeService = Substitute.For<ITradeService>();
         IReportRepository reportRepository = Substitute.For<IReportRepository>();
-        CreateInterDayReport createInterDayReport = new(tradeService, reportRepository);
+        CreateInterDayReport createInterDayReport = new(tradeService, reportRepository, logger);
         TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId);
         DateTime createdAt = DateTime.UtcNow;
         DateTime date = createdAt.AddDays(1);
@@ -91,6 +114,6 @@ public class CreateInterDayReportTest
         await createInterDayReport.Execute(createInterDayReportRequest);
 
         // Assert
-        await reportRepository.Received().Save(Arg.Is<Report>(report => report.Offset == timeZoneInfo.BaseUtcOffset.Hours));
+        await reportRepository.Received().Save(Arg.Is<Report>(report => report.Offset == timeZoneInfo.BaseUtcOffset));
     }
 }

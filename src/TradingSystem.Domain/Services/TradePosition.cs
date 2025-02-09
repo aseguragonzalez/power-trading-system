@@ -2,17 +2,17 @@ namespace TradingSystem.Domain.Services;
 
 public sealed class TradePosition
 {
+    private const int FirstPeriodId = 1;
+    private const int LastPeriodId = 24;
+
     public readonly int PeriodId;
 
     public readonly double Volume;
 
     public TradePosition(int periodId, double volume)
     {
-        if (periodId < 1 || periodId > 24)
-        {
-            throw new ArgumentOutOfRangeException(nameof(periodId), "PeriodId must be between 1 and 24");
-        }
-
+        ArgumentOutOfRangeException.ThrowIfLessThan(periodId, FirstPeriodId, nameof(periodId));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(periodId, LastPeriodId, nameof(periodId));
         PeriodId = periodId;
         Volume = volume;
     }

@@ -6,8 +6,6 @@ using TradingSystem.Domain.Services;
 
 public class TradePositionTest
 {
-    const string outOfRangeErrorMessage = "PeriodId must be between 1 and 24 (Parameter 'periodId')";
-
     [Fact]
     public void ShouldCreateAnInstanceOfTradePosition()
     {
@@ -23,7 +21,6 @@ public class TradePositionTest
         tradePosition.Volume.Should().Be(1.0);
     }
 
-
     [Fact]
     public void ShouldFailWhenPeriodIsGreaterThanLast()
     {
@@ -33,7 +30,7 @@ public class TradePositionTest
         Action act = () => _ = new TradePosition(periodId: periodId, volume: 1.0);
 
         // Act & Assert
-        act.Should().Throw<ArgumentOutOfRangeException>().WithMessage(outOfRangeErrorMessage);
+        act.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]
@@ -45,6 +42,6 @@ public class TradePositionTest
         Action act = () => _ = new TradePosition(periodId: periodId, volume: 1.0);
 
         // Act & Assert
-        act.Should().Throw<ArgumentOutOfRangeException>().WithMessage(outOfRangeErrorMessage);
+        act.Should().Throw<ArgumentOutOfRangeException>();
     }
 }

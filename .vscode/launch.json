@@ -1,0 +1,12 @@
+{
+  "configurations": [
+    {
+      "launchConfigurationId": "TargetFramework=;TradingSystem.App",
+      "name": "TradingSystem.App",
+      "projectPath": "${workspaceFolder}/src/TradingSystem.App/TradingSystem.App.csproj",
+      "request": "launch",
+      "type": "dotnet"
+    }
+  ],
+  "version": "0.2.0"
+}

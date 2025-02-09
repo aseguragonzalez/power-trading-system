@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
 using FluentAssertions;
-using TradingSystem.Domain;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
+using TradingSystem.Domain.Entities;
 using TradingSystem.Domain.Services;
 using TradingSystem.Infrastructure.Adapters.Repositories;
 
@@ -12,7 +14,8 @@ public class CsvReportRepositoryTest
     public void ShouldFailsWhenSettingsAreMissing()
     {
         // Arrange
-        Action act = () => _ = new CsvReportRepository(null!);
+        ILogger<CsvReportRepository> logger = Substitute.For<ILogger<CsvReportRepository>>();
+        Action act = () => _ = new CsvReportRepository(null!, logger);
 
         // Act and Assert
         act.Should().Throw<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'settings')");
@@ -22,10 +25,11 @@ public class CsvReportRepositoryTest
     public void ShouldCreateAnInstance()
     {
         // Arrange
+        ILogger<CsvReportRepository> logger = Substitute.For<ILogger<CsvReportRepository>>();
         CsvReportRepositorySettings settings = new(directory: "reports");
 
         // Act
-        CsvReportRepository repository = new(settings);
+        CsvReportRepository repository = new(settings, logger);
 
         // Assert
         repository.Should().NotBeNull();
@@ -35,9 +39,10 @@ public class CsvReportRepositoryTest
     public async Task ShouldFailWhenSaveWithoutReport()
     {
         // Arrange
+        ILogger<CsvReportRepository> logger = Substitute.For<ILogger<CsvReportRepository>>();
         CsvReportRepositorySettings settings = new(directory: "reports");
-        CsvReportRepository repository = new(settings);
-        Report report = new(date: DateTime.UtcNow.AddDays(1), offset: 0);
+        CsvReportRepository repository = new(settings, logger);
+        Report report = new(date: DateTime.UtcNow.AddDays(1), offset: TimeSpan.Zero);
         report.AddTradePositions(new TradePositions(
             [
                 new TradePosition(1, 100),
@@ -66,8 +71,9 @@ public class CsvReportRepositoryTest
         // Arrange
         string directoryPath = $"./reports_{DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)}";
         CsvReportRepositorySettings settings = new(directory: directoryPath);
-        CsvReportRepository repository = new(settings);
-        Report report = new(date: DateTime.UtcNow.AddDays(1), offset: 0);
+        ILogger<CsvReportRepository> logger = Substitute.For<ILogger<CsvReportRepository>>();
+        CsvReportRepository repository = new(settings, logger);
+        Report report = new(date: DateTime.UtcNow.AddDays(1), offset: TimeSpan.Zero);
         report.AddTradePositions(new TradePositions(
             [
                 new TradePosition(1, 100),

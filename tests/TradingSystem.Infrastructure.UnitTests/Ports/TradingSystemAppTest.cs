@@ -1,7 +1,7 @@
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NSubstitute.Exceptions;
-using TradingSystem.Application;
+using TradingSystem.Application.UseCases;
 using TradingSystem.Infrastructure.Ports;
 
 namespace TradingSystem.Infrastructure.UnitTests.Ports;
@@ -12,19 +12,34 @@ public sealed class TradingSystemAppTest
     public void ShouldFailsWhenSettingsIsMissing()
     {
         // Arrange
+        ILogger<TradingSystemApp> logger = Substitute.For<ILogger<TradingSystemApp>>();
         ICreateInterDayReport createInterDayReport = Substitute.For<ICreateInterDayReport>();
-        Action act = () => _ = new TradingSystemApp(settings: null!, createInterDayReport);
+        Action act = () => _ = new TradingSystemApp(settings: null!, createInterDayReport, logger);
 
         // Act & Assert
         act.Should().Throw<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'settings')");
     }
 
     [Fact]
+    public void ShouldFailsWhenLoggerIsMissing()
+    {
+        // Arrange
+        ILogger<TradingSystemApp>? logger = null;
+        TradingSystemAppSettings settings = new();
+        ICreateInterDayReport createInterDayReport = Substitute.For<ICreateInterDayReport>();
+        Action act = () => _ = new TradingSystemApp(settings, createInterDayReport, logger!);
+
+        // Act & Assert
+        act.Should().Throw<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'logger')");
+    }
+
+    [Fact]
     public void ShoudFailsWhenCreateInterDayReportIsMissing()
     {
         // Arrange
+        ILogger<TradingSystemApp> logger = Substitute.For<ILogger<TradingSystemApp>>();
         TradingSystemAppSettings settings = new();
-        Action act = () => _ = new TradingSystemApp(settings, createInterDayReport: null!);
+        Action act = () => _ = new TradingSystemApp(settings, createInterDayReport: null!, logger);
 
         // Act & Assert
         act.Should().Throw<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'createInterDayReport')");
@@ -34,11 +49,12 @@ public sealed class TradingSystemAppTest
     public void ShouldCreateAnInstance()
     {
         // Arrange
+        ILogger<TradingSystemApp> logger = Substitute.For<ILogger<TradingSystemApp>>();
         TradingSystemAppSettings settings = new();
         ICreateInterDayReport createInterDayReport = Substitute.For<ICreateInterDayReport>();
 
         // Act
-        TradingSystemApp tradingSystemApp = new(settings, createInterDayReport);
+        TradingSystemApp tradingSystemApp = new(settings, createInterDayReport, logger);
 
         // Assert
         tradingSystemApp.Should().NotBeNull();
@@ -48,13 +64,14 @@ public sealed class TradingSystemAppTest
     public async Task ShouldCreateReportsAfterStart()
     {
         // Arrange
+        ILogger<TradingSystemApp> logger = Substitute.For<ILogger<TradingSystemApp>>();
         TradingSystemAppSettings settings = new();
         ICreateInterDayReport createInterDayReport = Substitute.For<ICreateInterDayReport>();
         createInterDayReport.Execute(Arg.Any<CreateInterDayReportRequest>()).Returns(Task.CompletedTask);
-        TradingSystemApp tradingSystemApp = new(settings, createInterDayReport);
+        TradingSystemApp tradingSystemApp = new(settings, createInterDayReport, logger);
 
         // Act
-        _ = Task.Run(tradingSystemApp.Start);
+        _ = Task.Run(async () => await tradingSystemApp.Start());
 
         // Assert
         tradingSystemApp.Stop();
@@ -65,15 +82,16 @@ public sealed class TradingSystemAppTest
     public async Task ShouldContinuesWhenSomeExceptionHappends()
     {
         // Arrange
+        ILogger<TradingSystemApp> logger = Substitute.For<ILogger<TradingSystemApp>>();
         TradingSystemAppSettings settings = new(secondsBetweenReports: 1);
         ICreateInterDayReport createInterDayReport = Substitute.For<ICreateInterDayReport>();
         createInterDayReport
             .Execute(Arg.Any<CreateInterDayReportRequest>())
             .Returns(Task.FromException<Exception>(new Exception()), [Task.CompletedTask, Task.CompletedTask, Task.CompletedTask]);
-        TradingSystemApp tradingSystemApp = new(settings, createInterDayReport);
+        TradingSystemApp tradingSystemApp = new(settings, createInterDayReport, logger);
 
         // Act
-        _ = Task.Run(tradingSystemApp.Start);
+        _ = Task.Run(async () => await tradingSystemApp.Start());
 
         // Assert
         await Task.Delay(2000);

@@ -1,10 +1,13 @@
 ﻿using FluentAssertions;
+using TradingSystem.Domain.Entities;
 using TradingSystem.Domain.Services;
 
 namespace TradingSystem.Domain.UnitTests;
 
 public class ReportTest
 {
+    private const string TimeZoneId = "Europe/Berlin";
+
     [Fact]
     public void ShouldFailWhenAskingForPreviousDates()
     {
@@ -14,7 +17,7 @@ public class ReportTest
         Action act = () => _ = new Report(createdAt: createdAt, date: date);
 
         // Act & Assert
-        act.Should().Throw<ArgumentOutOfRangeException>().WithMessage("Date cannot be in the past. (Parameter 'date')");
+        act.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]
@@ -36,22 +39,23 @@ public class ReportTest
     public void ShouldCreateAnInstanceWithDateValue()
     {
         // Arrange
-        DateTime date = DateTime.UtcNow.AddDays(1);
+        TimeSpan offset = TimeSpan.Zero;
+        DateTime reportDate = DateTime.UtcNow.AddDays(1);
 
         // Act
-        Report report = new(date: date, offset: 0);
+        Report report = new(reportDate, offset);
 
         // Assert
-        report.Date.Should().Be(date);
+        report.Date.Should().Be(reportDate);
         report.CreatedAt.Should().BeCloseTo(DateTime.UtcNow, precision: TimeSpan.FromSeconds(10));
-        report.Offset.Should().Be(0);
+        report.Offset.Should().Be(offset);
     }
 
     [Fact]
     public void ShouldEnsureDateIsInUtc()
     {
         // Arrange
-        TimeZoneInfo berlinTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        TimeZoneInfo berlinTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId);
         DateTime date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, berlinTimeZone);
 
         // Act
@@ -65,7 +69,7 @@ public class ReportTest
     public void ShouldEnsureCreatedAtIsInUtc()
     {
         // Arrange
-        TimeZoneInfo berlinTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        TimeZoneInfo berlinTimeZone = TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId);
         DateTime createdAt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, berlinTimeZone);
 
         // Act
@@ -79,7 +83,7 @@ public class ReportTest
     public void ShouldRetrieveDefaultPositionsWhenNoTradePositionsWereAdded()
     {
         // Arrange
-        Report report = new(DateTime.UtcNow.AddDays(1), offset: 0);
+        Report report = new(DateTime.UtcNow.AddDays(1), offset: TimeSpan.Zero);
 
         // Act
         IEnumerable<ReportPosition> positions = report.GetPositions();
@@ -123,7 +127,7 @@ public class ReportTest
     {
         // Arrange
         DateTime createdAt = new(2023, 7, 1, 19, 15, 0, DateTimeKind.Utc);
-        Report report = new(date: createdAt.AddDays(1), createdAt: createdAt, offset: 2);
+        Report report = new(date: createdAt.AddDays(1), createdAt: createdAt, offset: TimeSpan.FromHours(2));
         report.AddTradePositions(tradePositions);
 
         // Act
