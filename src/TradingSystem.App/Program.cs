@@ -8,23 +8,13 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var timeZoneId = GetTimeZoneIdFromArgs(args);
-        var secondsBetweenReports = GetSecondsBetweenReports(args);
-        var retrySeconds = GetSecondsFromArgs(args);
-        var path = GetPathFromArgs(args);
-
-        ServiceProvider serviceProvider = ConfigureServices(
-            new ServiceCollection(),
-            timeZoneId: timeZoneId,
-            secondsBetweenReports: secondsBetweenReports,
-            retrySeconds: retrySeconds,
-            path: path
-        );
+        AppArgs appArgs = new(args);
+        ServiceProvider serviceProvider = ConfigureServices(new ServiceCollection(), appArgs);
 
         var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
         logger.LogInformation(
             "Args: timeZoneId={timeZoneId}, secondsBetweenReports={secondsBetweenReports}, retrySeconds={retrySeconds}, path={path}",
-            timeZoneId, secondsBetweenReports, retrySeconds, path
+            appArgs.TimeZoneId, appArgs.SecondsBetweenReports, appArgs.RetrySeconds, appArgs.Path
         );
 
         var app = serviceProvider.GetRequiredService<TradingSystemApp>();
@@ -52,91 +42,13 @@ class Program
         app.Stop();
     }
 
-    static string? GetTimeZoneIdFromArgs(string[] args)
-    {
-        for (int i = 0; i < args.Length; i++)
-        {
-            switch (args[i])
-            {
-                case "-t":
-                case "--timezone":
-                    if (i + 1 < args.Length)
-                    {
-                        return args[i + 1];
-                    }
-                    break;
-            }
-        }
-        return null;
-    }
-
-    static int? GetSecondsBetweenReports(string[] args)
-    {
-        for (int i = 0; i < args.Length; i++)
-        {
-            switch (args[i])
-            {
-                case "-s":
-                case "--seconds":
-                    if (i + 1 < args.Length)
-                    {
-                        return int.Parse(args[i + 1]);
-                    }
-                    break;
-            }
-        }
-        return null;
-    }
-
-    static string? GetPathFromArgs(string[] args)
-    {
-        for (int i = 0; i < args.Length; i++)
-        {
-            switch (args[i])
-            {
-                case "-p":
-                case "--path":
-                    if (i + 1 < args.Length)
-                    {
-                        return args[i + 1];
-                    }
-                    break;
-            }
-        }
-        return null;
-    }
-
-    static int? GetSecondsFromArgs(string[] args)
-    {
-        for (int i = 0; i < args.Length; i++)
-        {
-            switch (args[i])
-            {
-                case "-r":
-                case "--retries":
-                    if (i + 1 < args.Length)
-                    {
-                        return int.Parse(args[i + 1]);
-                    }
-                    break;
-            }
-        }
-        return null;
-    }
-
-    static ServiceProvider ConfigureServices(
-        IServiceCollection services,
-        string? timeZoneId = null,
-        int? secondsBetweenReports = null,
-        string? path = null,
-        int? retrySeconds = null
-    ) =>
+    static ServiceProvider ConfigureServices(IServiceCollection services, AppArgs appArgs) =>
         services
             .AddLogging(builder => builder.AddConsole())
             .Configure<LoggerFilterOptions>(options => options.MinLevel = LogLevel.Information)
-            .AddTradingSystemAppSettings(timeZoneId: timeZoneId, secondsBetweenReports: secondsBetweenReports)
-            .AddCsvReportRepositorySettings(path: path)
-            .AddResilientTradeServiceSettings(secondsBetweenRetries: retrySeconds)
+            .AddTradingSystemAppSettings(timeZoneId: appArgs.TimeZoneId, secondsBetweenReports: appArgs.SecondsBetweenReports)
+            .AddCsvReportRepositorySettings(path: appArgs.Path)
+            .AddResilientTradeServiceSettings(secondsBetweenRetries: appArgs.RetrySeconds)
             .AddUseCases()
             .AddAdapters()
             .AddPorts()
