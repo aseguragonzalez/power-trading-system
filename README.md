@@ -1,9 +1,12 @@
 # Power Trading system
 
+![Code Coverage](https://img.shields.io/badge/Code%20Coverage-83%25-success?style=flat)
+
 ## Pre-requisites
 
 - [Docker][docker]
 - [Dev Container][devcontainer]
+- [Pre-commit][pre-commit]
 - [Visual Studio Code][vscode]
 
 ## Getting Started
@@ -62,6 +65,7 @@ Sample command:
 - [Dotnet Core][dotnet]
 - [Fluent Assertions][fluent-assertions]
 - [NSubsitute][nsubstitute]
+- [Pre-commit][pre-commit]
 - [xUnit][xunit]
 
 
@@ -71,6 +75,7 @@ Sample command:
 [dotnet]: https://dotnet.microsoft.com/download
 [fluent-assertions]: https://github.com/fluentassertions/fluentassertions
 [nsubstitute]: https://nsubstitute.github.io/
+[pre-commit]: https://pre-commit.com/
 [timezones]: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 [vscode]: https://code.visualstudio.com/
 [xunit]: https://xunit.net/
