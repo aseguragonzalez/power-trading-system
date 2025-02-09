@@ -2,6 +2,8 @@ name: .NET Console App CI
 
 on:
   push:
+    branches:
+    - main
   pull_request:
 
 permissions:
@@ -27,5 +29,11 @@ jobs:
     - name: Build Console App
       run: dotnet build --no-restore --configuration Release
 
-    - name: Run Tests
-      run: dotnet test --no-build --configuration Release --verbosity normal
+    - name: Collect Code Coverage
+      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --results-directory ./TestResults
+
+    - name: Publish Code Coverage
+      uses: actions/upload-artifact@v4
+      with:
+        name: code-coverage-report
+        path: ./TestResults
