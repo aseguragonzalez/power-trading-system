@@ -43,6 +43,6 @@ public class TradeServiceTest
 
         // Act & Assert
         tradePositions.Should().NotBeNull();
-        tradePositions.Positions.Should().HaveCount(trades.Periods.Count());
+        tradePositions.Positions.Should().HaveCount(trades.Periods.Length);
     }
 }

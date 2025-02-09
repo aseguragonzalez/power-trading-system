@@ -2,7 +2,7 @@ namespace TradingSystem.Infrastructure.Adapters.Services;
 
 public sealed class ResilientTradeServiceSettings
 {
-    public readonly TimeSpan SecondsBetweenRetries;
+    public TimeSpan SecondsBetweenRetries { get; }
 
     public ResilientTradeServiceSettings(int secondsBetweenRetries)
     {

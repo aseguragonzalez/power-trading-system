@@ -1,3 +1,4 @@
+using Axpo;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -88,7 +89,10 @@ public sealed class TradingSystemAppTest
         ICreateInterDayReport createInterDayReport = Substitute.For<ICreateInterDayReport>();
         createInterDayReport
             .Execute(Arg.Any<CreateInterDayReportRequest>())
-            .Returns(Task.FromException<Exception>(new Exception()), [Task.CompletedTask, Task.CompletedTask, Task.CompletedTask]);
+            .Returns(
+                Task.FromException(new PowerServiceException("PowerServiceException")),
+                [Task.CompletedTask, Task.CompletedTask, Task.CompletedTask]
+            );
         TradingSystemApp tradingSystemApp = new(settings, createInterDayReport, logger);
 
         // Act

@@ -32,6 +32,19 @@ public class AppArgsTest
     }
 
     [Fact]
+    public void ShouldReturnTimeZoneIdNullWhenItHasNotAValue()
+    {
+        // Arrange & Act
+        AppArgs appArgs = new([AppArgs.TimeZoneIdShortArg]);
+
+        // Assert
+        appArgs.TimeZoneId.Should().BeNull();
+        appArgs.SecondsBetweenReports.Should().BeNull();
+        appArgs.RetrySeconds.Should().BeNull();
+        appArgs.Path.Should().BeNull();
+    }
+
+    [Fact]
     public void ShouldReturnsSecondsBetweenReportsWhenItUseArgs()
     {
         // Act & Arrange
@@ -52,6 +65,19 @@ public class AppArgsTest
 
         // Assert
         appArgs.SecondsBetweenReports.Should().Be(60);
+        appArgs.TimeZoneId.Should().BeNull();
+        appArgs.RetrySeconds.Should().BeNull();
+        appArgs.Path.Should().BeNull();
+    }
+
+    [Fact]
+    public void ShouldReturnsSecondsBetweenReportsNullWhenItHasNotGotValue()
+    {
+        // Act & Arrange
+        AppArgs appArgs = new([AppArgs.SecondsBetweenReportsShortArg]);
+
+        // Assert
+        appArgs.SecondsBetweenReports.Should().BeNull();
         appArgs.TimeZoneId.Should().BeNull();
         appArgs.RetrySeconds.Should().BeNull();
         appArgs.Path.Should().BeNull();

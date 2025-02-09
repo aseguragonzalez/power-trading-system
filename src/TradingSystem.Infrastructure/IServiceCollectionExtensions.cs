@@ -1,5 +1,6 @@
 using Axpo;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 using TradingSystem.Domain.Repositories;
 using TradingSystem.Domain.Services;
 using TradingSystem.Infrastructure.Adapters.Repositories;
@@ -29,7 +30,7 @@ public static class IServiceCollectionExtensions
     public static IServiceCollection AddResilientTradeServiceSettings(this IServiceCollection services, int? secondsBetweenRetries) =>
         services.AddSingleton(_ =>
             new ResilientTradeServiceSettings(
-                secondsBetweenRetries ?? int.Parse(Environment.GetEnvironmentVariable("SECONDS_BETWEEN_RETRIES")!)
+                secondsBetweenRetries ?? int.Parse(Environment.GetEnvironmentVariable("SECONDS_BETWEEN_RETRIES")!, CultureInfo.InvariantCulture)
             )
         );
 
@@ -40,7 +41,8 @@ public static class IServiceCollectionExtensions
     public static IServiceCollection AddTradingSystemAppSettings(this IServiceCollection services, int? secondsBetweenReports, string? timeZoneId) =>
         services.AddSingleton(_ =>
             new TradingSystemAppSettings(
-                secondsBetweenReports: secondsBetweenReports ?? int.Parse(Environment.GetEnvironmentVariable("SECONDS_BETWEEN_REPORTS")!),
+                secondsBetweenReports: secondsBetweenReports ??
+                    int.Parse(Environment.GetEnvironmentVariable("SECONDS_BETWEEN_REPORTS")!, CultureInfo.InvariantCulture),
                 timeZoneId: timeZoneId ?? Environment.GetEnvironmentVariable("TIME_ZONE")!
             )
         );

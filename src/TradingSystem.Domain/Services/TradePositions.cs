@@ -2,7 +2,7 @@ namespace TradingSystem.Domain.Services;
 
 public sealed class TradePositions
 {
-    public readonly IEnumerable<TradePosition> Positions;
+    public IEnumerable<TradePosition> Positions { get; }
 
     public TradePositions(IEnumerable<TradePosition>? positions)
     {

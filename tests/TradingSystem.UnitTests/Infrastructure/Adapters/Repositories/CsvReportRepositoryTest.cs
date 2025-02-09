@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using System.Globalization;
 using TradingSystem.Domain.Entities;
 using TradingSystem.Domain.Services;
 using TradingSystem.Infrastructure.Adapters.Repositories;
@@ -42,23 +42,6 @@ public class CsvReportRepositoryTest
         ILogger<CsvReportRepository> logger = Substitute.For<ILogger<CsvReportRepository>>();
         CsvReportRepositorySettings settings = new(directory: "reports");
         CsvReportRepository repository = new(settings, logger);
-        Report report = new(date: DateTime.UtcNow.AddDays(1), offset: TimeSpan.Zero);
-        report.AddTradePositions(new TradePositions(
-            [
-                new TradePosition(1, 100),
-                new TradePosition(2, 100),
-                new TradePosition(3, 100),
-                new TradePosition(4, 100),
-                new TradePosition(5, 100),
-                new TradePosition(6, 100),
-                new TradePosition(7, 100),
-                new TradePosition(8, 100),
-                new TradePosition(9, 100),
-                new TradePosition(10, 100),
-                new TradePosition(11, 100),
-                new TradePosition(12, 100),
-            ]
-        ));
         Func<Task> act = async () => await repository.Save(null!);
 
         // Act & Assert

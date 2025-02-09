@@ -2,14 +2,14 @@ namespace TradingSystem.Application.UseCases;
 
 public sealed class CreateInterDayReportRequest
 {
-    public readonly TimeZoneInfo TimeZone;
+    public TimeZoneInfo TimeZone { get; }
 
-    public readonly DateTime ReportDate;
+    public DateTime ReportDate { get; }
 
     public CreateInterDayReportRequest(DateTime reportDate, TimeZoneInfo timeZoneInfo)
     {
         ArgumentNullException.ThrowIfNull(timeZoneInfo, nameof(timeZoneInfo));
-        this.ReportDate = reportDate;
-        this.TimeZone = timeZoneInfo;
+        ReportDate = reportDate;
+        TimeZone = timeZoneInfo;
     }
 }

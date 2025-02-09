@@ -1,4 +1,4 @@
-
+using Axpo;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -67,14 +67,16 @@ public class ResilientTradeServiceTest
     public async Task ShouldRetryWhenInnerServiceFails()
     {
         // Arrange
-        int retryCount = new Random().Next(1, 3);
-        var exceptionsResult = Enumerable.Range(0, retryCount).Select(_ => Task.FromException<TradePositions>(new Exception()));
+        int retryCount = 3;
+        var exceptionsResult = Enumerable.Range(0, retryCount).Select(
+            _ => Task.FromException<TradePositions>(new PowerServiceException("PowerServiceException"))
+        );
         DateTime date = DateTime.UtcNow;
         ResilientTradeServiceSettings settings = new(secondsBetweenRetries: 1);
         ILogger<ResilientTradeService> logger = Substitute.For<ILogger<ResilientTradeService>>();
         ITradeService innerService = Substitute.For<ITradeService>();
-        innerService.GetPositionsByDate(date).ReturnsForAnyArgs(
-            Task.FromException<TradePositions>(new Exception()),
+        innerService.GetPositionsByDate(date).ReturnsForAnyArgs<Task<TradePositions>>(
+            Task.FromException<TradePositions>(new PowerServiceException("PowerServiceException")),
             [.. exceptionsResult, Task.FromResult(new TradePositions())]
         );
         ResilientTradeService service = new(settings, innerService, logger);

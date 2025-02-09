@@ -1,3 +1,4 @@
+using Axpo;
 using Microsoft.Extensions.Logging;
 using TradingSystem.Domain.Services;
 
@@ -22,7 +23,7 @@ public sealed class ResilientTradeService : ITradeService
         this.logger = logger;
     }
 
-    public async Task<TradePositions> GetPositionsByDate(DateTime date, CancellationToken cancellationToken = default)
+    public async Task<TradePositions> GetPositionsByDate(DateTime reportDate, CancellationToken cancellationToken = default)
     {
         // We can use Polly to handle retries, circuit breakers, etc. but for this example we will use a simple retry mechanism
         TradePositions? tradePositions = null;
@@ -31,14 +32,14 @@ public sealed class ResilientTradeService : ITradeService
             cancellationToken.ThrowIfCancellationRequested();
             try
             {
-                this.logger.LogInformation("Getting positions by date: {date}", date);
-                tradePositions = await this.innerService.GetPositionsByDate(date, cancellationToken);
-                this.logger.LogInformation("Positions by date {date} retrieved successfully.", date);
+                this.logger.LogInformation("Getting positions by date: {ReportDate}", reportDate);
+                tradePositions = await this.innerService.GetPositionsByDate(reportDate, cancellationToken);
+                this.logger.LogInformation("Positions by date {ReportDate} retrieved successfully.", reportDate);
             }
-            catch (Exception ex)
+            catch (PowerServiceException ex)
             {
                 this.logger.LogError(ex, "An error occurred while trying to get positions by date");
-                this.logger.LogWarning("We will wait {seconds} seconds before retrying.", this.settings.SecondsBetweenRetries);
+                this.logger.LogWarning("We will wait {Seconds} seconds before retrying.", this.settings.SecondsBetweenRetries);
                 await Task.Delay(this.settings.SecondsBetweenRetries, cancellationToken);
                 this.logger.LogWarning("We will retry now.");
             }

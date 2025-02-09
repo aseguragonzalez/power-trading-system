@@ -1,5 +1,5 @@
-using System.Globalization;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 using TradingSystem.Domain.Entities;
 using TradingSystem.Domain.Repositories;
 
@@ -32,24 +32,6 @@ public sealed class CsvReportRepository : IReportRepository
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        try
-        {
-            await SaveReport(report, cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            logger.LogWarning("Saving report {ReportName} was cancelled", report.ReportName);
-            throw;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Failed to save report {ReportName}", report.ReportName);
-            throw;
-        }
-    }
-
-    private async Task SaveReport(Report report, CancellationToken cancellationToken)
-    {
         using FileStream csvReportStream = File.OpenWrite(Path.Combine(settings.Directory, report.ReportName));
         await using StreamWriter writer = new(csvReportStream);
         await writer.WriteLineAsync(CsvHeaders);

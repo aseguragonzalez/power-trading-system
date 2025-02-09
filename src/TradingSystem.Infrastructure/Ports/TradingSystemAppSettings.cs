@@ -5,9 +5,8 @@ public sealed class TradingSystemAppSettings
     public const int DefaultSecondsBetweenReports = 60;
     public const string DefaultTimeZoneId = "Europe/Madrid";
 
-    public readonly TimeZoneInfo TimeZone;
-
-    public readonly TimeSpan SecondsBetweenReports;
+    public TimeZoneInfo TimeZone { get; }
+    public TimeSpan SecondsBetweenReports { get; }
 
     public TradingSystemAppSettings(string timeZoneId = DefaultTimeZoneId, int secondsBetweenReports = DefaultSecondsBetweenReports)
     {

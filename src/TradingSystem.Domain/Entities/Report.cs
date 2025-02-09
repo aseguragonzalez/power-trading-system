@@ -8,11 +8,11 @@ public sealed class Report
 
     private readonly double[] volumes = new double[MaxPeriods];
 
-    public readonly DateTime CreatedAt;
+    public DateTime CreatedAt { get; }
 
-    public readonly DateTime Date;
+    public DateTime Date { get; }
 
-    public readonly TimeSpan Offset;
+    public TimeSpan Offset { get; }
 
     public Report(DateTime createdAt, DateTime date, TimeSpan offset)
     {
@@ -41,9 +41,9 @@ public sealed class Report
 
     public IEnumerable<ReportPosition> GetPositions()
     {
-        DateTime baseLine = new DateTime(CreatedAt.Year, CreatedAt.Month, CreatedAt.Day, CreatedAt.Hour, 0, 0).AddHours(this.Offset.Hours);
+        DateTime baseLine = new DateTime(CreatedAt.Year, CreatedAt.Month, CreatedAt.Day, CreatedAt.Hour, 0, 0).AddHours(Offset.Hours);
 
-        return this.volumes.Select((volume, offset) => new ReportPosition(baseLine.AddHours(offset + 1), volume));
+        return volumes.Select((volume, offset) => new ReportPosition(baseLine.AddHours(offset + 1), volume));
     }
 
     public void AddTradePositions(TradePositions tradePositions)
@@ -52,7 +52,7 @@ public sealed class Report
 
         foreach (TradePosition tradePosition in tradePositions.Positions)
         {
-            this.volumes[tradePosition.PeriodId - 1] += tradePosition.Volume;
+            volumes[tradePosition.PeriodId - 1] += tradePosition.Volume;
         }
     }
 }
