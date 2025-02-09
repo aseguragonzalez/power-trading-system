@@ -13,10 +13,10 @@ public class AppArgs
 
     private readonly List<string> args;
 
-    public readonly string? TimeZoneId;
-    public readonly int? SecondsBetweenReports;
-    public readonly int? RetrySeconds;
-    public readonly string? Path;
+    public string? TimeZoneId { get; }
+    public int? SecondsBetweenReports { get; }
+    public int? RetrySeconds { get; }
+    public string? Path { get; }
 
     public AppArgs(string[] args)
     {

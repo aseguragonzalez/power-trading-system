@@ -1,3 +1,4 @@
+using Axpo;
 using Microsoft.Extensions.Logging;
 using TradingSystem.Application.UseCases;
 
@@ -46,7 +47,7 @@ public sealed class TradingSystemApp
                 // Log the cancellation
                 this.isRunning = false;
             }
-            catch (Exception ex)
+            catch (PowerServiceException ex)
             {
                 this.logger.LogError(ex, "An error occurred while creating the inter-day report");
             }

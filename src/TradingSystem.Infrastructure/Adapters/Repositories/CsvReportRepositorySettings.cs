@@ -2,7 +2,7 @@ namespace TradingSystem.Infrastructure.Adapters.Repositories;
 
 public sealed class CsvReportRepositorySettings
 {
-    public readonly string Directory;
+    public string Directory { get; }
 
     public CsvReportRepositorySettings(string directory)
     {

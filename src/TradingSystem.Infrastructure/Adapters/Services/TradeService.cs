@@ -13,10 +13,10 @@ public sealed class TradeService : ITradeService
         this.powerService = powerService;
     }
 
-    public async Task<TradePositions> GetPositionsByDate(DateTime date, CancellationToken cancellationToken = default)
+    public async Task<TradePositions> GetPositionsByDate(DateTime reportDate, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        IEnumerable<PowerTrade> powerTrades = await this.powerService.GetTradesAsync(date);
+        IEnumerable<PowerTrade> powerTrades = await this.powerService.GetTradesAsync(reportDate);
         TradePositions tradePositions = new(
             positions: powerTrades.SelectMany(powerTrade =>
                 powerTrade.Periods.Select(
