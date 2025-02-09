@@ -1,7 +1,7 @@
 using FluentAssertions;
 using TradingSystem.Domain.Entities;
 
-namespace TradingSystem.Domain.UnitTests;
+namespace TradingSystem.UnitTests.Domain;
 
 public class ReportPositionTest
 {

@@ -4,7 +4,7 @@ using NSubstitute;
 using TradingSystem.Application.UseCases;
 using TradingSystem.Infrastructure.Ports;
 
-namespace TradingSystem.Infrastructure.UnitTests.Ports;
+namespace TradingSystem.UnitTests.Infrastructure.Ports;
 
 public sealed class TradingSystemAppTest
 {
@@ -74,6 +74,7 @@ public sealed class TradingSystemAppTest
         _ = Task.Run(async () => await tradingSystemApp.Start());
 
         // Assert
+        await Task.Delay(2000);
         tradingSystemApp.Stop();
         await createInterDayReport.Received(1).Execute(Arg.Any<CreateInterDayReportRequest>());
     }

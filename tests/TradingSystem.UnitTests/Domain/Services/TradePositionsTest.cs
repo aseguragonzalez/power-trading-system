@@ -1,4 +1,4 @@
-namespace TradingSystem.Domain.UnitTests.Services;
+namespace TradingSystem.UnitTests.Domain.Services;
 
 using FluentAssertions;
 using TradingSystem.Domain.Services;

@@ -6,7 +6,7 @@ using TradingSystem.Domain.Entities;
 using TradingSystem.Domain.Repositories;
 using TradingSystem.Domain.Services;
 
-namespace TradingSystem.Application.UnitTests.UseCases;
+namespace TradingSystem.UnitTests.Application.UseCases;
 
 public class CreateInterDayReportTest
 {
