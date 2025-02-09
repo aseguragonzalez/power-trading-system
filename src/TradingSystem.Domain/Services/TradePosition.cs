@@ -5,9 +5,9 @@ public sealed class TradePosition
     private const int FirstPeriodId = 1;
     private const int LastPeriodId = 24;
 
-    public readonly int PeriodId;
+    public int PeriodId { get; }
 
-    public readonly double Volume;
+    public double Volume { get; }
 
     public TradePosition(int periodId, double volume)
     {

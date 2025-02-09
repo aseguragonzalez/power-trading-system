@@ -2,9 +2,9 @@ namespace TradingSystem.Domain.Entities;
 
 public sealed class ReportPosition
 {
-    public readonly DateTime Period;
+    public DateTime Period { get; }
 
-    public readonly double Volume;
+    public double Volume { get; }
 
     public ReportPosition(DateTime period, double volume)
     {
