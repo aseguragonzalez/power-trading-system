@@ -4,42 +4,40 @@ using TradingSystem.Infrastructure.Ports;
 
 namespace TradingSystem.App;
 
-class Program
+internal sealed class Program
 {
     static async Task Main(string[] args)
     {
         AppArgs appArgs = new(args);
         ServiceProvider serviceProvider = ConfigureServices(new ServiceCollection(), appArgs);
 
-        var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+        ILogger<Program> logger = serviceProvider.GetRequiredService<ILogger<Program>>();
         logger.LogInformation(
-            "Args: timeZoneId={timeZoneId}, secondsBetweenReports={secondsBetweenReports}, retrySeconds={retrySeconds}, path={path}",
+            "Args: TimeZoneId={TimeZoneId}, Seconds={SecondsBetweenReports}, Retry={RetrySeconds}, Path={Path}",
             appArgs.TimeZoneId, appArgs.SecondsBetweenReports, appArgs.RetrySeconds, appArgs.Path
         );
 
-        var app = serviceProvider.GetRequiredService<TradingSystemApp>();
-        using var cancellationTokenSource = new CancellationTokenSource();
-        bool isRunning = true;
-
-        do
+        TradingSystemApp app = serviceProvider.GetRequiredService<TradingSystemApp>();
+        using CancellationTokenSource cancellationTokenSource = new();
+        Console.CancelKeyPress += (sender, e) =>
         {
-            try
-            {
-                await app.Start(cancellationTokenSource.Token);
-            }
-            catch (OperationCanceledException)
-            {
-                logger.LogInformation("Operation canceled");
-                isRunning = false;
-                cancellationTokenSource.Cancel();
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error occurred");
-            }
-        } while (isRunning);
+            Console.WriteLine("CTRL+C detected. Cancelling...");
+            cancellationTokenSource.Cancel();
+            e.Cancel = true;
+        };
 
-        app.Stop();
+        try
+        {
+            await app.Start(cancellationTokenSource.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            logger.LogInformation("Operation was canceled");
+        }
+        finally
+        {
+            app.Stop();
+        }
     }
 
     static ServiceProvider ConfigureServices(IServiceCollection services, AppArgs appArgs) =>

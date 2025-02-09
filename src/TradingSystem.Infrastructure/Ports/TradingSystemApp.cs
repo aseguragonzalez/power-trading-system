@@ -24,41 +24,44 @@ public sealed class TradingSystemApp
         this.createInterDayReport = createInterDayReport;
         this.settings = settings;
         this.logger = logger;
-        this.isRunning = false;
+        isRunning = false;
     }
 
     public async Task Start(CancellationToken cancellationToken = default)
     {
-        this.logger.LogInformation("Trading System App started");
-        this.isRunning = true;
+        logger.LogInformation("Trading System App started");
+        isRunning = true;
         do
         {
-            cancellationToken.ThrowIfCancellationRequested();
             try
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 CreateInterDayReportRequest createInterDayReportRequest = new(DateTime.UtcNow.AddDays(1), this.settings.TimeZone);
-                this.logger.LogInformation("Executing CreateInterDayReport use case");
-                await this.createInterDayReport.Execute(createInterDayReportRequest, cancellationToken);
-                this.logger.LogInformation("CreateInterDayReport use case executed successfully");
+                logger.LogInformation("Executing CreateInterDayReport use case");
+                await createInterDayReport.Execute(createInterDayReportRequest, cancellationToken);
+                logger.LogInformation("CreateInterDayReport use case executed successfully");
             }
             catch (OperationCanceledException)
             {
-                this.logger.LogInformation("User requested to stop the Trading System App");
-                // Log the cancellation
-                this.isRunning = false;
+                logger.LogInformation("User requested to stop the Trading System App");
+                isRunning = false;
             }
             catch (PowerServiceException ex)
             {
-                this.logger.LogError(ex, "An error occurred while creating the inter-day report");
+                logger.LogError(ex, "An error occurred while creating the inter-day report");
             }
-            await Task.Delay(this.settings.SecondsBetweenReports, cancellationToken);
 
+            if (isRunning)
+            {
+                await Task.Delay(settings.SecondsBetweenReports, cancellationToken);
+            }
         } while (this.isRunning);
-        this.logger.LogInformation("Trading System App stopped");
+        logger.LogInformation("Trading System App stopped");
     }
 
     public void Stop()
     {
-        this.isRunning = false;
+        logger.LogInformation("Trading System App stopping...");
+        isRunning = false;
     }
 }
