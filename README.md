@@ -1,7 +1,5 @@
 # Power Trading system
 
-![Code Coverage](https://img.shields.io/badge/Code%20Coverage-83%25-success?style=flat)
-
 ## Pre-requisites
 
 - [Docker][docker]
@@ -35,6 +33,20 @@ dotnet test
 
 ## Running the Application
 
+### Using Docker
+
+To build the Docker image, you can use the following command:
+
+```bash
+docker build -t trading-system:latest .
+```
+
+To run the app in a container, you can use the following command:
+
+```bash
+docker run --env-file .env -v ./reports:/app/reports trading-system:latest
+```
+
 ### Environment variables
 
 You have to define the following environment variables with the default values the app will use:
@@ -53,7 +65,7 @@ Also, you can use the following optional arguments when running the app:
 - Seconds between reports: `-s <seconds>` or `--seconds <seconds>`
 - Seconds between retries: `-r <seconds>` or `--retries <seconds>`
 
-Sample command:
+Example command:
 
 ```bash
 ./TradingSystem.App -p /tmp/reports -t Europe/Madrid -s 10 -r 5
@@ -67,7 +79,6 @@ Sample command:
 - [NSubsitute][nsubstitute]
 - [Pre-commit][pre-commit]
 - [xUnit][xunit]
-
 
 [auto-fixture]: https://github.com/AutoFixture/AutoFixture
 [devcontainer]: https://code.visualstudio.com/docs/remote/containers
