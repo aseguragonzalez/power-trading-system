@@ -17,26 +17,30 @@ internal sealed class Program
             appArgs.TimeZoneId, appArgs.SecondsBetweenReports, appArgs.RetrySeconds, appArgs.Path
         );
 
-        TradingSystemApp app = serviceProvider.GetRequiredService<TradingSystemApp>();
-        using CancellationTokenSource cancellationTokenSource = new();
-        Console.CancelKeyPress += (sender, e) =>
-        {
-            Console.WriteLine("CTRL+C detected. Cancelling...");
-            cancellationTokenSource.Cancel();
-            e.Cancel = true;
-        };
-
+        TradingSystemApp? app = null;
         try
         {
+            app = serviceProvider.GetRequiredService<TradingSystemApp>();
+            using CancellationTokenSource cancellationTokenSource = new();
+            Console.CancelKeyPress += (sender, e) =>
+            {
+                Console.WriteLine("CTRL+C detected. Cancelling...");
+                cancellationTokenSource.Cancel();
+                e.Cancel = true;
+            };
             await app.Start(cancellationTokenSource.Token);
         }
         catch (OperationCanceledException)
         {
             logger.LogInformation("Operation was canceled");
         }
+        catch (ArgumentNullException ex)
+        {
+            logger.LogError(ex, "Environment variables are missing or ServiceProvider failed to resolve a dependency");
+        }
         finally
         {
-            app.Stop();
+            app?.Stop();
         }
     }
 
