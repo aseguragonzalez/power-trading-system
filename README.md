@@ -12,13 +12,13 @@ This project was built using DevContainer in Visual Studio Code. To start develo
 
 To get started with development, you can use the following commands:
 
-### Restore the dependencies
+### Restore dependencies
 
 ```bash
 dotnet restore
 ```
 
-### Building the project
+### Building project
 
 ```bash
 dotnet build
@@ -58,12 +58,19 @@ Sample command:
 
 ## Build With
 
+- [AutoFixture][auto-fixture]
 - [Dotnet Core][dotnet]
+- [Fluent Assertions][fluent-assertions]
+- [NSubsitute][nsubstitute]
 - [xUnit][xunit]
 
+
+[auto-fixture]: https://github.com/AutoFixture/AutoFixture
 [devcontainer]: https://code.visualstudio.com/docs/remote/containers
 [docker]: https://www.docker.com/
 [dotnet]: https://dotnet.microsoft.com/download
+[fluent-assertions]: https://github.com/fluentassertions/fluentassertions
+[nsubstitute]: https://nsubstitute.github.io/
 [timezones]: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 [vscode]: https://code.visualstudio.com/
 [xunit]: https://xunit.net/
