@@ -5,7 +5,7 @@ using NSubstitute;
 using TradingSystem.Domain.Services;
 using TradingSystem.Infrastructure.Adapters.Services;
 
-namespace TradingSystem.Infrastructure.UnitTests.Adapters.Services;
+namespace TradingSystem.UnitTests.Infrastructure.Adapters.Services;
 
 public class ResilientTradeServiceTest
 {

@@ -2,7 +2,7 @@
 using TradingSystem.Domain.Entities;
 using TradingSystem.Domain.Services;
 
-namespace TradingSystem.Domain.UnitTests;
+namespace TradingSystem.UnitTests.Domain;
 
 public class ReportTest
 {

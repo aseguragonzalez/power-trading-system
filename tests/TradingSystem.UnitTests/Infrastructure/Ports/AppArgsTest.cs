@@ -1,7 +1,7 @@
 using FluentAssertions;
 using TradingSystem.Infrastructure.Ports;
 
-namespace TradingSystem.Infrastructure.UnitTests.Ports;
+namespace TradingSystem.UnitTests.Infrastructure.Ports;
 
 public class AppArgsTest
 {
