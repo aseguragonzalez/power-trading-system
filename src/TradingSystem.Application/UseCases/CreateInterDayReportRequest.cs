@@ -2,7 +2,7 @@ namespace TradingSystem.Application.UseCases;
 
 public sealed class CreateInterDayReportRequest
 {
-    public TimeZoneInfo TimeZone { get;}
+    public TimeZoneInfo TimeZone { get; }
 
     public DateTime ReportDate { get; }
 

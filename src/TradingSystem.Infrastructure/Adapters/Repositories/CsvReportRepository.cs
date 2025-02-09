@@ -1,5 +1,5 @@
-using System.Globalization;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 using TradingSystem.Domain.Entities;
 using TradingSystem.Domain.Repositories;
 
